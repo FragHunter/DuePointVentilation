@@ -67,3 +67,25 @@ The WLED/GLEDOPTO adapter translates this logical percentage into the concrete c
 A module must never receive non-zero intake and exhaust targets at the same time during normal automatic operation.
 
 During OFF, FAULT and switching dead-time, both targets are zero.
+
+## Command freshness and reconnect safety
+
+Logical actuator commands now carry:
+
+- command_id
+- generated_at_ms
+- valid_until_ms
+- transition sequence
+
+The WLED/GLEDOPTO adapter must reject expired commands. Transient fan targets should not be retained in MQTT. On adapter/controller startup or reconnect, the safe default is all fans OFF until a fresh command is received.
+
+## Airflow calibration
+
+Equal PWM does not imply equal airflow. The controller therefore supports independent direction factors for:
+
+- room A supply
+- room A exhaust
+- room B supply
+- room B exhaust
+
+These factors remain 1.0 until the bench tests provide measured balancing data.

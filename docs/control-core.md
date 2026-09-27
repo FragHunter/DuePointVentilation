@@ -32,3 +32,13 @@ Current ventilation decisions expose explicit reasons:
 During dead-time and fault states, both room modules receive zero fan demand.
 
 The initial nominal timing is 60 s phase time with 3 s dead-time. Both remain configuration values and must be tuned from the heat-recovery measurement rig.
+
+## Restart and direction-change safety
+
+Automatic operation now enters STARTUP_DEADTIME before the first active phase after OFF or FAULT. The same all-off dead-time principle is used between PHASE_A and PHASE_B.
+
+Each transition increments a sequence counter. Actuator output carries a validity deadline so stale commands can be rejected after MQTT/WLED reconnects.
+
+## Direction calibration
+
+Per-room/per-direction calibration factors allow later airflow balancing from measured bench data. This avoids assuming that identical PWM values produce identical flow through different fans/modules.

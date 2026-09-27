@@ -23,3 +23,13 @@ The JavaScript control core can be exposed to Node-RED either as:
 The project should prefer one shared implementation rather than copy/pasting control formulas into multiple Function nodes.
 
 The first importable production flow will be added after the exact Zigbee2MQTT friendly names and WLED controller endpoints are known.
+
+## Actuator adapter safety requirements
+
+The Node-RED/WLED adapter must:
+
+- default all outputs to OFF at deployment/reconnect,
+- reject output commands past valid_until_ms,
+- avoid retained non-zero fan target messages,
+- preserve the controller sequence/command ID in telemetry,
+- never bypass STARTUP_DEADTIME or reversal dead-time.

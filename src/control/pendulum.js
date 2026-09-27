@@ -1,5 +1,6 @@
 export const States = Object.freeze({
   OFF: "OFF",
+  STARTUP_DEADTIME: "STARTUP_DEADTIME",
   PHASE_A: "PHASE_A",
   DEADTIME_TO_B: "DEADTIME_TO_B",
   PHASE_B: "PHASE_B",
@@ -7,18 +8,47 @@ export const States = Object.freeze({
   FAULT: "FAULT",
 });
 
-export function targetsForState(state, pwmPct = 65) {
+function clampPct(value) {
+  return Math.max(0, Math.min(100, value));
+}
+
+function factor(calibration, room, direction) {
+  const value = calibration?.[room]?.[direction];
+  return Number.isFinite(value) ? value : 1.0;
+}
+
+function calibrated(pwmPct, calibration, room, direction) {
+  return clampPct(pwmPct * factor(calibration, room, direction));
+}
+
+export function targetsForState(state, pwmPct = 65, calibration = undefined) {
   const off = { intake_pct: 0, exhaust_pct: 0, mode: "OFF" };
   switch (state) {
     case States.PHASE_A:
       return {
-        room_a: { intake_pct: pwmPct, exhaust_pct: 0, mode: "SUPPLY" },
-        room_b: { intake_pct: 0, exhaust_pct: pwmPct, mode: "EXHAUST" },
+        room_a: {
+          intake_pct: calibrated(pwmPct, calibration, "room_a", "supply"),
+          exhaust_pct: 0,
+          mode: "SUPPLY",
+        },
+        room_b: {
+          intake_pct: 0,
+          exhaust_pct: calibrated(pwmPct, calibration, "room_b", "exhaust"),
+          mode: "EXHAUST",
+        },
       };
     case States.PHASE_B:
       return {
-        room_a: { intake_pct: 0, exhaust_pct: pwmPct, mode: "EXHAUST" },
-        room_b: { intake_pct: pwmPct, exhaust_pct: 0, mode: "SUPPLY" },
+        room_a: {
+          intake_pct: 0,
+          exhaust_pct: calibrated(pwmPct, calibration, "room_a", "exhaust"),
+          mode: "EXHAUST",
+        },
+        room_b: {
+          intake_pct: calibrated(pwmPct, calibration, "room_b", "supply"),
+          exhaust_pct: 0,
+          mode: "SUPPLY",
+        },
       };
     default:
       return { room_a: { ...off }, room_b: { ...off } };
@@ -26,7 +56,7 @@ export function targetsForState(state, pwmPct = 65) {
 }
 
 export function initialController(nowMs = 0) {
-  return { state: States.OFF, entered_at_ms: nowMs };
+  return { state: States.OFF, entered_at_ms: nowMs, sequence: 0 };
 }
 
 export function stepPendulum({
@@ -37,6 +67,7 @@ export function stepPendulum({
   phase_time_ms = 60000,
   dead_time_ms = 3000,
   pwm_pct = 65,
+  calibration = undefined,
 }) {
   if (!controller || !Object.values(States).includes(controller.state)) {
     throw new TypeError("controller state is invalid");
@@ -53,8 +84,10 @@ export function stepPendulum({
 
   let state = controller.state;
   let entered = controller.entered_at_ms;
+  let sequence = Number.isInteger(controller.sequence) ? controller.sequence : 0;
 
   const enter = (next) => {
+    if (state !== next) sequence += 1;
     state = next;
     entered = now_ms;
   };
@@ -68,7 +101,10 @@ export function stepPendulum({
     switch (state) {
       case States.OFF:
       case States.FAULT:
-        enter(States.PHASE_A);
+        enter(States.STARTUP_DEADTIME);
+        break;
+      case States.STARTUP_DEADTIME:
+        if (elapsed >= dead_time_ms) enter(States.PHASE_A);
         break;
       case States.PHASE_A:
         if (elapsed >= phase_time_ms) enter(States.DEADTIME_TO_B);
@@ -86,7 +122,7 @@ export function stepPendulum({
   }
 
   return {
-    controller: { state, entered_at_ms: entered },
-    targets: targetsForState(state, pwm_pct),
+    controller: { state, entered_at_ms: entered, sequence },
+    targets: targetsForState(state, pwm_pct, calibration),
   };
 }

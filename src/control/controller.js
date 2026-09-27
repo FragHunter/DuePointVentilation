@@ -3,6 +3,7 @@ import { States, initialController, stepPendulum } from "./pendulum.js";
 
 function isCycleActive(state) {
   return [
+    States.STARTUP_DEADTIME,
     States.PHASE_A,
     States.PHASE_B,
     States.DEADTIME_TO_A,
@@ -47,7 +48,10 @@ export function controlStep({
     phase_time_ms: config.pendulum.phase_time_ms,
     dead_time_ms: config.pendulum.dead_time_ms,
     pwm_pct: config.pendulum.pwm_pct,
+    calibration: config.pendulum.calibration,
   });
+
+  const commandTtlMs = config.actuator?.command_ttl_ms ?? 5000;
 
   return {
     state: {
@@ -60,6 +64,10 @@ export function controlStep({
     },
     output: {
       phase: result.controller.state,
+      sequence: result.controller.sequence,
+      command_id: `${result.controller.sequence}:${now_ms}`,
+      generated_at_ms: now_ms,
+      valid_until_ms: now_ms + commandTtlMs,
       reason: controller_fault ? "CONTROLLER_FAULT" : eligibility.reason,
       ventilation_eligible: eligibility.eligible,
       delta_absolute_humidity_gm3:
