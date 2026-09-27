@@ -62,22 +62,39 @@ Open checks:
 
 ## GLEDOPTO / WLED controller
 
-Status: **exact model still missing**
+### GLEDOPTO GL-C-211WL
 
-Known:
+Status: **available / selected; fan-interface validation still open**
 
-- WLED/GLEDOPTO PWM controller is intended to drive the fan-control path.
+Verified public manufacturer/manual data:
+
+- ESP32 WLED PWM LED controller
+- input: 12–24 V DC
+- total output current: 15 A max
+- output current/channel: 10 A max
+- Wi-Fi
+- IP20
+- 108 × 45 × 18 mm
+- documented PWM LED-strip GPIO channels: GPIO19, GPIO18, GPIO17, GPIO16, GPIO4
+- DIY interface: IO33
+
+Project implication:
+
+The GL-C-211WL is an analog LED-strip PWM controller. The normal high-current outputs must not be assumed to be directly compatible with the 4-pin P12 PWM logic input.
+
+Preferred project direction is to power the P12 continuously from the 12 V rail and use a verified logic/open-drain interface from a suitable ESP32/GPIO signal if the required PWM behavior can be generated reliably.
 
 Open checks:
 
-- exact product/model/hardware revision
-- output topology
-- output PWM frequency
-- whether output is a power PWM MOSFET output or a logic-level control output
-- whether an interface circuit is required for the ARCTIC 4-pin PWM input
-- WLED firmware/version
+- actual hardware revision
+- installed WLED firmware/version
+- exact electrical output-stage topology
+- candidate GPIO signal voltage/frequency/duty behavior
+- boot/reset behavior
+- fan PWM interface transistor/open-drain stage if required
+- tach feedback strategy
 
-This remains the most important electrical compatibility gate.
+See `GL-C-211WL-INTEGRATION.md`.
 
 ## Servo system
 
