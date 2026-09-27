@@ -38,8 +38,8 @@ test("stale outside sensor inhibits automatic ventilation", () => {
 test("hysteresis uses lower stop threshold while already ventilating", () => {
   const now = 1_000_000;
   const input = {
-    indoor: { temperature_c: 20, relative_humidity_pct: 60, timestamp_ms: now },
-    outdoor: { temperature_c: 18, relative_humidity_pct: 58, timestamp_ms: now },
+    indoor: { temperature_c: 20, relative_humidity_pct: 55, timestamp_ms: now },
+    outdoor: { temperature_c: 19, relative_humidity_pct: 55, timestamp_ms: now },
     now_ms: now,
     start_delta_gm3: 1.0,
     stop_delta_gm3: 0.2,
