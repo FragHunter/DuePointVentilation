@@ -47,12 +47,15 @@ Manufacturer specifications relevant to this project:
 - 120 × 120 × 25 mm
 - target PWM frequency 25 kHz; documented acceptable range 21–28 kHz
 
-Project architecture currently assumes:
+Project architecture:
 
-- **three physical P12 Pro PST fans total are currently planned on one GL-C-211WL**
-- the control software still models four logical room/direction fan roles
-- the exact mechanical mapping from three physical fans to those four logical roles is still an explicit design item
-- only the fan(s) required for the active phase should run
+- **three physical P12 Pro PST fans total on one GL-C-211WL**
+- selected topology: **servo-routed 2+1 fan banks**
+- fan_1 + fan_2 form the parallel supply bank
+- fan_3 forms the exhaust bank
+- the four logical room/direction roles are resolved by a coupled servo diverter that swaps room assignment between the fixed supply/exhaust banks
+- all fans remain OFF while the diverter moves
+- fan_1 + fan_2 are candidates for one shared PWM/open-drain signal, pending electrical bench validation
 
 Open checks:
 
@@ -107,8 +110,9 @@ Model: **MZ966**
 
 Role:
 
-- future bypass/routing dampers
-- possible branch isolation if the axial opposed-fan architecture has excessive stopped-fan drag
+- primary routing actuator for the selected servo-routed 2+1 fan topology
+- mechanically coupled double-diverter: position A = room A supply / room B exhaust; position B = room B supply / room A exhaust
+- future bypass/frost/maintenance routing may reuse or extend the same actuator concept
 
 Known project supply:
 
