@@ -3,6 +3,7 @@
 See also: [GAP-MATRIX.md](GAP-MATRIX.md) for the current cross-workstream list of open gaps, blockers and physical validation tasks.
 See also: [HARDWARE-INVENTORY.md](HARDWARE-INVENTORY.md) for the selected/available hardware and remaining electrical verification items.
 See also: [GL-C-211WL-INTEGRATION.md](GL-C-211WL-INTEGRATION.md) for controller-specific fan-interface validation.
+See also: [GL-C-211WL-3FAN-TOPOLOGY.md](GL-C-211WL-3FAN-TOPOLOGY.md) for the confirmed single-controller/three-fan architecture and its unresolved role mapping.
 See also: [MZ966-SERVO-INTEGRATION.md](MZ966-SERVO-INTEGRATION.md) for servo current sizing, control signal and interlock strategy.
 
 This document is the top-level execution plan for the complete project from sensors and psychrometrics through CAD, printing, fan control, Node-RED orchestration, commissioning and later servo/bypass upgrades.
@@ -151,7 +152,9 @@ Implemented there:
 - [x] Record servo model: Miuzei MZ966.
 - [ ] Verify exact MZ966 operating-voltage range, stall/running current and PWM timing requirements.
 - [ ] Verify LK1263 input range/efficiency/thermal derating against the MZ966 load.
-- [ ] Confirm exact ARCTIC P12 Pro PST variant and quantity.
+- [x] Record physical fan count: three P12 Pro PST fans controlled by one GL-C-211WL.
+- [ ] Confirm exact ARCTIC P12 Pro PST variant and physical mounting fit.
+- [ ] Resolve the mechanical mapping from three physical fans to the four current logical room/direction roles.
 - [ ] Confirm current Mega S nozzle is 0.4 mm or update printer profile.
 - [ ] Record available PETG brand/material.
 - [ ] Record Zigbee coordinator model.
