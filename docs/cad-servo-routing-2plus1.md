@@ -248,6 +248,12 @@ At creation of ROUTING-V0.1 all five solids build successfully, all fit the cons
 
 The 4 mm shaft family and seal clearances are deliberately test series rather than final dimensions. The MZ966 spline is deliberately not guessed; the linkage coupon attaches to the supplied physical horn.
 
+Bench protocol: docs/bench-test-protocol-routing-v0.1.md
+
+Measurement templates:
+- cad/heat-exchanger/test-data/templates/routing-v0.1-coupon-servo.csv
+- cad/heat-exchanger/test-data/templates/routing-v0.1-airflow.csv
+
 ## Open measurements before final dimensions
 
 - exact P12 physical fit from fan gauge
