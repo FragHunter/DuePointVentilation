@@ -5,6 +5,7 @@ on:
     paths:
       - "cad/heat-exchanger/**"
       - "docs/cad-hx-v1.1.md"
+      - "docs/cad-servo-routing-2plus1.md"
       - "docs/simulation-hx-v1.1.md"
       - "docs/printing-anycubic-i3-mega-s.md"
       - ".github/workflows/cad-heat-exchanger.yml"
@@ -12,6 +13,7 @@ on:
     paths:
       - "cad/heat-exchanger/**"
       - "docs/cad-hx-v1.1.md"
+      - "docs/cad-servo-routing-2plus1.md"
       - "docs/simulation-hx-v1.1.md"
       - "docs/printing-anycubic-i3-mega-s.md"
       - ".github/workflows/cad-heat-exchanger.yml"
@@ -45,6 +47,13 @@ jobs:
       - name: Build STEP and STL
         run: python build.py --config parameters.yaml --out generated
 
+      - name: Build servo-routing validation STEP and STL
+        run: |
+          PYTHONPATH=. python routing/build.py \
+            --config routing/parameters.yaml \
+            --hx-config parameters.yaml \
+            --out routing/generated
+
       - name: Check Anycubic i3 Mega S build-volume fit
         run: |
           python tools/check_printer_fit.py             --config parameters.yaml             --printer config/printers/anycubic-i3-mega-s.yaml             --out review/generated/printer-fit.json
@@ -67,4 +76,14 @@ jobs:
             cad/heat-exchanger/generated/*.json
             cad/heat-exchanger/review/generated/*
             cad/heat-exchanger/simulation/generated/*
+          if-no-files-found: error
+
+      - name: Upload ROUTING-V0.1 validation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ROUTING-V0.1-validation
+          path: |
+            cad/heat-exchanger/routing/generated/*.step
+            cad/heat-exchanger/routing/generated/*.stl
+            cad/heat-exchanger/routing/generated/*.json
           if-no-files-found: error

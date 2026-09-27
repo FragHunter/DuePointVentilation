@@ -1,0 +1,46 @@
+{
+  "notes": {
+    "seal": "slot series is a fit gauge; final gasket/seat geometry requires bench data",
+    "servo_spline": "not modelled; linkage coupon bolts to supplied horn",
+    "shaft": "4 mm family is provisional until physical hardware is selected"
+  },
+  "parts": {
+    "core-routing-adapter": {
+      "x": 146.0000002000001,
+      "y": 146.0000002000001,
+      "z": 6.001398880996362
+    },
+    "p12-fan-pod": {
+      "x": 120.00000020000006,
+      "y": 120.00000020000006,
+      "z": 25.034811815908597
+    },
+    "seal-gap-coupon": {
+      "x": 100.00000020000003,
+      "y": 24.000000200000027,
+      "z": 8.000000200000027
+    },
+    "servo-linkage-coupon": {
+      "x": 70.00000020000003,
+      "y": 16.000000200000027,
+      "z": 4.001056981197234
+    },
+    "shaft-clearance-coupon": {
+      "x": 90.00000020000003,
+      "y": 20.001429962796248,
+      "z": 14.000000200000027
+    }
+  },
+  "printer_envelope_mm": {
+    "x": 200.0,
+    "y": 200.0,
+    "z": 200.0
+  },
+  "printing": {
+    "layer_height_mm": 0.2,
+    "material": "PETG",
+    "nozzle_mm": 0.4
+  },
+  "purpose": "servo-routed 2+1 manifold validation coupons",
+  "revision": "ROUTING-V0.1"
+}

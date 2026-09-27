@@ -133,7 +133,7 @@ Do not print the complete manifold first.
 Print small validation parts in this order:
 
 1. **servo-horn/linkage coupon**
-   - verify MZ966 spline/horn attachment
+   - verify attachment to the supplied MZ966 horn/linkage hardware
    - verify linkage clearance
 
 2. **flap hinge/shaft coupon**
@@ -202,16 +202,16 @@ Do not mechanically bury the connectors or make electrical separation impossible
 
 ### R2 — diverter coupon
 
-- [ ] model one flap/seat
-- [ ] model shaft/bearing
-- [ ] model MZ966 mount/linkage
+- [x] model seal-gap/seat validation coupon
+- [x] model horizontal shaft/bearing-clearance coupon
+- [x] model generic MZ966-horn linkage coupon (no unverified spline geometry)
 - [ ] print and measure torque/travel/leakage
 
 ### R3 — single-lane prototype
 
-- [ ] fan pod
+- [x] model one modular P12 fan pod
 - [ ] transition/collector
-- [ ] one core adapter
+- [x] model one HX-V1.1 core-routing adapter
 - [ ] pressure-drop test
 
 ### R4 — complete 2+1 manifold
@@ -231,6 +231,22 @@ Do not mechanically bury the connectors or make electrical separation impossible
 - [ ] acceptable leakage
 - [ ] airflow balance calibratable
 - [ ] condensate drains safely
+
+## ROUTING-V0.1 printable validation set
+
+Tracked exports are in cad/heat-exchanger/exports/ROUTING-V0.1/.
+
+Print in this order:
+
+1. servo-linkage coupon
+2. shaft-clearance coupon
+3. seal-gap coupon
+4. P12 fan pod
+5. core-routing adapter
+
+At creation of ROUTING-V0.1 all five solids build successfully, all fit the conservative 200 x 200 x 200 mm Mega S envelope, and the complete heat-exchanger/routing test suite passes 27/27.
+
+The 4 mm shaft family and seal clearances are deliberately test series rather than final dimensions. The MZ966 spline is deliberately not guessed; the linkage coupon attaches to the supplied physical horn.
 
 ## Open measurements before final dimensions
 
