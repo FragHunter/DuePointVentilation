@@ -1,5 +1,7 @@
 # DuePointVentilation — Master implementation plan
 
+See also: [GAP-MATRIX.md](GAP-MATRIX.md) for the current cross-workstream list of open gaps, blockers and physical validation tasks.
+
 This document is the top-level execution plan for the complete project from sensors and psychrometrics through CAD, printing, fan control, Node-RED orchestration, commissioning and later servo/bypass upgrades.
 
 It intentionally combines the previously separate roadmap, CAD plan, bench protocol and control plan into one ordered checklist with explicit gates.
