@@ -154,7 +154,7 @@ Implemented there:
 - [ ] Verify LK1263 input range/efficiency/thermal derating against the MZ966 load.
 - [x] Record physical fan count: three P12 Pro PST fans controlled by one GL-C-211WL.
 - [ ] Confirm exact ARCTIC P12 Pro PST variant and physical mounting fit.
-- [ ] Resolve the mechanical mapping from three physical fans to the four current logical room/direction roles.
+- [x] Resolve the mechanical mapping from three physical fans to the four logical roles: **servo-routed 2+1 topology** (fan_1+fan_2 supply bank, fan_3 exhaust bank, coupled diverter swaps room assignment).
 - [ ] Confirm current Mega S nozzle is 0.4 mm or update printer profile.
 - [ ] Record available PETG brand/material.
 - [ ] Record Zigbee coordinator model.
@@ -448,27 +448,43 @@ If moisture re-evaporation is significant, evaluate:
 
 ---
 
-## Phase 10 — Decide final fan-routing architecture
+## Phase 10 — Build and validate the selected fan-routing architecture
 
-### Option A — axial opposed fans
+Selected architecture: **servo-routed 2+1 fan banks**.
 
-Keep if:
+Physical groups:
 
-- stopped-fan drag is acceptable,
-- noise is acceptable,
-- airflow target is met.
+- fan_1 + fan_2: parallel supply bank,
+- fan_3: exhaust bank,
+- one logical MZ966 routing actuator moves a coupled double-diverter.
 
-### Option B — branched fan path with dampers
+Route A:
 
-Use if axial arrangement fails airflow/noise targets.
+- supply bank -> room A,
+- room B -> exhaust bank.
 
-Then design:
+Route B:
 
-- parallel intake/exhaust branches,
-- passive or servo-actuated isolation,
-- Miuzei 180-degree servo mounts,
-- safe OPENING/OPEN/CLOSING/CLOSED states,
-- fan start only after correct damper position.
+- supply bank -> room B,
+- room A -> exhaust bank.
+
+### Required work
+
+- [x] define the logical 2+1 fan-bank mapping,
+- [x] add control-side route/fan-group validation,
+- [ ] CAD the separated supply/exhaust plenums and coupled diverter,
+- [ ] verify that both airflow paths remain isolated in both positions,
+- [ ] measure servo travel time under real damper load,
+- [ ] set dead-time >= measured travel + settling margin,
+- [ ] validate shared PWM/open-drain signal for fan_1 + fan_2,
+- [ ] keep fan_3 on a separately balanceable exhaust PWM group,
+- [ ] measure supply-bank vs exhaust-bank flow at 30/50/70/100%,
+- [ ] derive per-direction correction factors,
+- [ ] verify all fans stay OFF during servo movement.
+
+### Gate 10
+
+Do not freeze final wall CAD or GPIO wiring until route sealing, servo timing, PWM loading and airflow balance pass bench validation.
 
 ---
 
@@ -676,13 +692,13 @@ The next practical work should be performed in this order:
 1. **Print `HX-V1.1-core-coupon.stl` on the Mega S.**
 2. **Print `fit-core-plug` + `fit-sleeve-ring` and measure real clearance.**
 3. **Print `fan-mount-gauge` and physically fit the P12 Pro PST.**
-4. Record the **exact GLEDOPTO controller model**.
-5. Perform the **electrical PWM PoC** with one fan.
-6. Pair and log the **Aqara T1 sensors through Zigbee2MQTT**.
-7. Finish the **WLED adapter** with TTL/reconnect safety.
-8. Print plenums/sleeve only after the calibration parts pass.
-9. Measure **airflow with and without the stopped opposite P12**.
-10. Only then decide whether to print/use the full core or pivot to a branched damper architecture.
+4. CAD the **2+1 supply/exhaust plenums + coupled servo diverter**.
+5. Perform the **electrical PWM PoC** with one fan, then fan_1 + fan_2 on the candidate shared open-drain PWM signal.
+6. Measure the **MZ966 travel time and current at 6 V** with the real diverter load.
+7. Pair and log the **Aqara T1 sensors through Zigbee2MQTT**.
+8. Finish the **WLED/servo adapter** with TTL/reconnect safety and fan-off-during-servo-motion interlock.
+9. Bench-measure **supply-bank vs exhaust-bank airflow** and derive calibration factors.
+10. Print plenums/sleeve/full core only after calibration parts and the revised routing CAD pass.
 
 ---
 
@@ -696,9 +712,9 @@ Pass: coupon, clearance pair and fan gauge are dimensionally acceptable.
 
 Pass: GLEDOPTO/WLED can safely and repeatably control the P12 system.
 
-## Gate C — axial airflow architecture
+## Gate C — servo-routed 2+1 airflow architecture
 
-Pass: airflow through the stopped opposite fan remains acceptable.
+Pass: both diverter positions seal correctly, servo travel fits within safe dead-time, supply/exhaust flow can be balanced, and no fan runs during routing movement.
 
 ## Gate D — regenerative core value
 
