@@ -1,0 +1,38 @@
+revision: ROUTING-V0.1
+
+printer:
+  # Conservative Anycubic i3 Mega S envelope already used by this project.
+  x_mm: 200
+  y_mm: 200
+  z_mm: 200
+
+linkage_coupon:
+  length_mm: 70
+  width_mm: 16
+  thickness_mm: 4
+  # M3-ish loose fit; real screw/horn hardware must still be measured.
+  hole_diameter_mm: 3.4
+  # Symmetric alternative lever arms around the center pivot.
+  hole_offsets_mm: [12, 20, 28]
+
+shaft_clearance_coupon:
+  length_mm: 90
+  width_mm: 20
+  height_mm: 14
+  # Provisional 4 mm shaft family; print first, then choose measured fit.
+  bore_diameters_mm: [3.8, 4.0, 4.2, 4.4, 4.6]
+  bore_pitch_mm: 14
+
+seal_gap_coupon:
+  length_mm: 100
+  width_mm: 24
+  height_mm: 8
+  # Candidate flap/seat clearances; final choice depends on the real seal.
+  slot_widths_mm: [0.6, 0.8, 1.0, 1.2, 1.4]
+  slot_pitch_mm: 16
+  slot_depth_mm: 5
+
+printing:
+  material: PETG
+  nozzle_mm: 0.4
+  layer_height_mm: 0.2
