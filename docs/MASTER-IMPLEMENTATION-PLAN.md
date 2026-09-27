@@ -154,7 +154,7 @@ Implemented there:
 - [ ] Verify LK1263 input range/efficiency/thermal derating against the MZ966 load.
 - [x] Record physical fan count: three P12 Pro PST fans controlled by one GL-C-211WL.
 - [ ] Confirm exact ARCTIC P12 Pro PST variant and physical mounting fit.
-- [x] Resolve the mechanical mapping from three physical fans to the four logical roles: **servo-routed 2+1 topology** (fan_1+fan_2 supply bank, fan_3 exhaust bank, coupled diverter swaps room assignment).
+- [x] Resolve the mechanical mapping from three physical fans to the four logical roles: **servo-routed 2+1 topology** (fan_1+fan_2 supply bank, fan_3 exhaust bank; two isolated full-area T-diverters swap room assignment and may share one MZ966 linkage).
 - [ ] Confirm current Mega S nozzle is 0.4 mm or update printer profile.
 - [ ] Record available PETG brand/material.
 - [ ] Record Zigbee coordinator model.
@@ -456,7 +456,7 @@ Physical groups:
 
 - fan_1 + fan_2: parallel supply bank,
 - fan_3: exhaust bank,
-- one logical MZ966 routing actuator moves a coupled double-diverter.
+- one logical MZ966 routing actuator may mechanically couple two separate full-area T-diverter shafts (supply_t_diverter + exhaust_t_diverter).
 
 Route A:
 
@@ -472,9 +472,15 @@ Route B:
 
 - [x] define the logical 2+1 fan-bank mapping,
 - [x] add control-side route/fan-group validation,
-- [ ] CAD the separated supply/exhaust plenums and coupled diverter,
-- [ ] verify that both airflow paths remain isolated in both positions,
-- [ ] measure servo travel time under real damper load,
+- [x] create ROUTING-V0.1 fit-validation coupons/interfaces,
+- [x] create ROUTING-V0.2 collector + monolithic diverter packaging proof,
+- [x] quantify the V0.2 branch-area blocker (3250 mm², about 33 % of P12/core area),
+- [x] pivot to ROUTING-V0.3 with separate 112 x 112 mm full-area supply/exhaust T-diverters,
+- [x] synchronize control mapping with distinct supply_t_diverter / exhaust_t_diverter units,
+- [ ] print/measure V0.1 shaft/seal/P12/core/linkage coupons,
+- [ ] measure V0.3 T-diverter pressure loss and closed-branch/shaft leakage,
+- [ ] integrate final shaft, seal, hard stops, branch adapters and condensate details,
+- [ ] measure servo travel time/current under the real dual-diverter load,
 - [ ] set dead-time >= measured travel + settling margin,
 - [ ] validate shared PWM/open-drain signal for fan_1 + fan_2,
 - [ ] keep fan_3 on a separately balanceable exhaust PWM group,
@@ -692,9 +698,9 @@ The next practical work should be performed in this order:
 1. **Print `HX-V1.1-core-coupon.stl` on the Mega S.**
 2. **Print `fit-core-plug` + `fit-sleeve-ring` and measure real clearance.**
 3. **Print `fan-mount-gauge` and physically fit the P12 Pro PST.**
-4. CAD the **2+1 supply/exhaust plenums + coupled servo diverter**.
+4. **Print/measure ROUTING-V0.1 fit coupons**; do not print the superseded V0.2 monolithic diverter as the main airflow prototype.
 5. Perform the **electrical PWM PoC** with one fan, then fan_1 + fan_2 on the candidate shared open-drain PWM signal.
-6. Measure the **MZ966 travel time and current at 6 V** with the real diverter load.
+6. After V0.1 fit values are known, print/assemble the **ROUTING-V0.3 full-area T-diverters** and measure MZ966 travel/current at 6 V with both shafts mechanically coupled.
 7. Pair and log the **Aqara T1 sensors through Zigbee2MQTT**.
 8. Finish the **WLED/servo adapter** with TTL/reconnect safety and fan-off-during-servo-motion interlock.
 9. Bench-measure **supply-bank vs exhaust-bank airflow** and derive calibration factors.
@@ -714,7 +720,7 @@ Pass: GLEDOPTO/WLED can safely and repeatably control the P12 system.
 
 ## Gate C — servo-routed 2+1 airflow architecture
 
-Pass: both diverter positions seal correctly, servo travel fits within safe dead-time, supply/exhaust flow can be balanced, and no fan runs during routing movement.
+Pass: both separate V0.3 T-diverters seal with measured leakage bounds, T-turn pressure loss is acceptable, both shafts reach complementary routes without binding, servo travel fits within safe dead-time, supply/exhaust flow can be balanced, and no fan runs during routing movement.
 
 ## Gate D — regenerative core value
 

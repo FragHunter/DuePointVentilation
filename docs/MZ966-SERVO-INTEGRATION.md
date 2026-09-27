@@ -135,7 +135,7 @@ The actuator adapter maps:
 
 Raw pulse values remain device configuration, not control-flow logic.
 
-The mechanism is a **coupled double-diverter**: one logical servo command changes both room connections together while keeping the supply and exhaust passages separated.
+The preferred ROUTING-V0.3 mechanism uses **two physically separate full-area T-diverters**. One logical servo command may mechanically couple their two shafts so the supply and exhaust routes switch together while the air bodies remain isolated. The earlier monolithic V0.2 double-diverter is superseded because its branch opening was only about 33% of the P12/core airflow area.
 
 ## Interlock policy
 
@@ -197,6 +197,7 @@ Do not use the 3 A LK1263 itself as the only instrument for determining stall cu
 Until MZ966 measurements exist:
 
 - primary project role: **routing actuator for the servo-routed 2+1 fan topology**
+- preferred mechanics: one MZ966 linkage couples supply_t_diverter and exhaust_t_diverter shafts from ROUTING-V0.3
 - position A = room A supply / room B exhaust
 - position B = room B supply / room A exhaust
 - design budget: **2.5 A per active servo at 6 V**

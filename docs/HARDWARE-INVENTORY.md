@@ -111,8 +111,9 @@ Model: **MZ966**
 Role:
 
 - primary routing actuator for the selected servo-routed 2+1 fan topology
-- mechanically coupled double-diverter: position A = room A supply / room B exhaust; position B = room B supply / room A exhaust
+- ROUTING-V0.3: mechanically couple two separate full-area T-diverter shafts (supply + exhaust); route A = room A supply / room B exhaust, route B = room B supply / room A exhaust
 - future bypass/frost/maintenance routing may reuse or extend the same actuator concept
+- V0.2 monolithic diverter is superseded for airflow development because its 3250 mm² branch was only about 33% of P12/core area; V0.3 uses 12544 mm² full-area ports
 
 Known project supply:
 

@@ -6,7 +6,7 @@ The three P12 Pro PST fans are arranged as a **servo-routed 2+1 topology**.
 
 - **Supply bank:** fan_1 + fan_2 in parallel airflow
 - **Exhaust bank:** fan_3
-- **Routing:** one logical MZ966 actuator moves a mechanically coupled double-diverter
+- **Routing:** one logical MZ966 actuator mechanically couples two physically separate full-area T-diverters (supply + exhaust)
 - fan rotation direction stays fixed
 - room assignment changes mechanically during pendulum dead-time
 
@@ -21,9 +21,9 @@ OUTSIDE IN
    |
    +--> fan_1 --+
    |            |
-   +--> fan_2 --+--> SUPPLY PLENUM --> coupled diverter --> ROOM A
+   +--> fan_2 --+--> SUPPLY PLENUM --> SUPPLY T-DIVERTER --> ROOM A
 
-ROOM B --> coupled diverter --> EXHAUST PLENUM --> fan_3 --> OUTSIDE OUT
+ROOM B --> EXHAUST T-DIVERTER --> EXHAUST PLENUM --> fan_3 --> OUTSIDE OUT
 ```
 
 Logical roles:
@@ -38,7 +38,7 @@ fan_1 = OFF
 fan_2 = OFF
 fan_3 = OFF
 
-servo moves coupled diverter from position A to position B
+servo/linkage moves both isolated T-diverters from position A to position B
 ```
 
 ### PHASE_B
@@ -48,9 +48,9 @@ OUTSIDE IN
    |
    +--> fan_1 --+
    |            |
-   +--> fan_2 --+--> SUPPLY PLENUM --> coupled diverter --> ROOM B
+   +--> fan_2 --+--> SUPPLY PLENUM --> SUPPLY T-DIVERTER --> ROOM B
 
-ROOM A --> coupled diverter --> EXHAUST PLENUM --> fan_3 --> OUTSIDE OUT
+ROOM A --> EXHAUST T-DIVERTER --> EXHAUST PLENUM --> fan_3 --> OUTSIDE OUT
 ```
 
 Logical roles:
@@ -69,32 +69,50 @@ The pendulum cycle requires **simultaneous opposite air functions** in every act
 - one room receives outside air,
 - the other room exhausts to outside.
 
-Putting all three fans into one common undivided air path would collapse those two functions into one pressure domain or require additional per-fan reversing valves. The 2+1 topology keeps supply and exhaust physically separated while still allowing the room assignment to be swapped by one coupled routing mechanism.
+Putting all three fans into one common undivided air path would collapse those two functions into one pressure domain or require additional per-fan reversing valves. The 2+1 topology keeps supply and exhaust physically separated. ROUTING-V0.3 implements that separation with two independent full-area T-diverter bodies whose shafts may be coupled to one MZ966.
 
 ## Mechanical diverter requirement
 
-The routing mechanism must behave like a double-pole, double-throw air switch.
+The preferred ROUTING-V0.3 mechanism uses **two physically separate full-area T-diverters**:
+
+- supply_t_diverter: supply bank -> core A or core B,
+- exhaust_t_diverter: core A or core B -> exhaust bank.
+
+The two air bodies remain isolated. Their shafts may be mechanically coupled to one MZ966 by a single_servo_linkage.
 
 Position A:
 
-- supply plenum -> room A
-- room B -> exhaust plenum
+- supply T-diverter -> room/core A,
+- room/core B -> exhaust T-diverter.
 
 Position B:
 
-- supply plenum -> room B
-- room A -> exhaust plenum
+- supply T-diverter -> room/core B,
+- room/core A -> exhaust T-diverter.
 
 Requirements:
 
-- supply and exhaust passages remain sealed from one another,
-- no fan operation while the mechanism is between positions,
+- supply and exhaust bodies remain sealed from one another,
+- no fan operation while either diverter is between stable positions,
 - positive mechanical stops,
-- low leakage at both end positions,
+- low closed-branch and shaft leakage,
 - service/manual position should be possible,
-- condensate paths must not be blocked by the diverter.
+- condensate paths must not be blocked,
+- both diverters must reach the complementary route without binding or one hard stop arriving prematurely.
 
-A single MZ966 may move both dampers through a linkage. If the torque or geometry requires two servos, the existing 6 V / 3 A rail rule remains: move servos sequentially until measured current proves simultaneous motion is safe.
+### Why ROUTING-V0.2 was superseded
+
+The monolithic side-by-side V0.2 double-diverter fit the Mega S but its branch opening was only 65 x 50 mm = **3250 mm²**.
+
+For comparison:
+
+- P12 112 mm aperture: about **9852 mm²**,
+- current core open area: **10000 mm²**,
+- V0.2 branch: only about **33 %** of fan/core area.
+
+ROUTING-V0.3 uses **112 x 112 mm = 12544 mm²** ports, about 127 % of the P12 aperture and 125 % of the current core open area. V0.2 remains tracked as engineering evidence but is not the preferred full-size airflow prototype.
+
+A single MZ966 may move both V0.3 shafts through linkage. If real torque/current shows that one servo is insufficient, the actuator architecture must be revisited from measured data rather than guessed.
 
 ## Electrical fan principle
 
@@ -179,6 +197,11 @@ logical_role_mapping:
   room_b_exhaust: exhaust_bank
 
 routing:
+  mechanism: coupled_dual_t_diverter
+  coupling: single_servo_linkage
+  mechanical_units:
+    supply: supply_t_diverter
+    exhaust: exhaust_t_diverter
   PHASE_A: ROOM_A_SUPPLY_ROOM_B_EXHAUST
   PHASE_B: ROOM_B_SUPPLY_ROOM_A_EXHAUST
 ```
@@ -210,8 +233,8 @@ fans OFF
 
 ## Bench work
 
-- [ ] confirm physical 2+1 plenum/diverter layout on paper/CAD
-- [ ] check that supply/exhaust passages never short-circuit
+- [x] define and CAD the preferred V0.3 dual full-area T-diverter layout
+- [ ] bench-verify that the two isolated T-diverter bodies never cross-leak
 - [ ] measure MZ966 travel time under real damper load
 - [ ] measure MZ966 movement/stall current at 6 V
 - [ ] verify fan_1 + fan_2 shared PWM input electrically
