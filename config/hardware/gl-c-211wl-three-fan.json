@@ -1,0 +1,19 @@
+{
+  "controller": {
+    "id": "gledopto-main",
+    "model": "GL-C-211WL",
+    "physical_fan_count": 3
+  },
+  "physical_fans": [
+    {"id": "fan_1", "channel": 1},
+    {"id": "fan_2", "channel": 2},
+    {"id": "fan_3", "channel": 3}
+  ],
+  "logical_role_mapping": {
+    "room_a_supply": null,
+    "room_a_exhaust": null,
+    "room_b_supply": null,
+    "room_b_exhaust": null
+  },
+  "shared_fan_acknowledgements": {}
+}

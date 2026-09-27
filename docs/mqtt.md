@@ -89,3 +89,11 @@ Equal PWM does not imply equal airflow. The controller therefore supports indepe
 - room B exhaust
 
 These factors remain 1.0 until the bench tests provide measured balancing data.
+
+## Physical fan-channel mapping
+
+Logical room/direction targets remain the MQTT/control contract.
+
+The GL-C-211WL adapter must not expose its three physical channels directly into psychrometric/FSM logic. A hardware-mapping layer translates logical roles to fan_1/fan_2/fan_3 only after the mechanical topology is explicitly configured and validated.
+
+The production map is currently intentionally incomplete until Issue #14 is resolved.

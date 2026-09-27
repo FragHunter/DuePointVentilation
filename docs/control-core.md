@@ -42,3 +42,23 @@ Each transition increments a sequence counter. Actuator output carries a validit
 ## Direction calibration
 
 Per-room/per-direction calibration factors allow later airflow balancing from measured bench data. This avoids assuming that identical PWM values produce identical flow through different fans/modules.
+
+## Three physical fans on one GL-C-211WL
+
+The current hardware inventory contains one GL-C-211WL and three physical P12 fans.
+
+The logical pendulum controller still exposes four directional roles:
+- room A supply
+- room A exhaust
+- room B supply
+- room B exhaust
+
+A separate hardware-map layer now validates the mapping from those logical roles to the three physical fan channels.
+
+Important behavior:
+- production configuration is intentionally invalid until every logical role is explicitly mapped,
+- sharing one physical fan between logical roles requires explicit mechanical acknowledgement,
+- if two logical roles ever command the same shared fan simultaneously, the mapper throws instead of guessing,
+- the unresolved mapping is tracked in Issue #14.
+
+The control FSM remains hardware-independent.
