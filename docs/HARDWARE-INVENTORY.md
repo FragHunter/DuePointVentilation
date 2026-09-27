@@ -98,14 +98,35 @@ See `GL-C-211WL-INTEGRATION.md`.
 
 ## Servo system
 
-### Miuzei 180-degree servos
+### Miuzei MZ966 180-degree servo
 
-Status: **planned later-stage actuator**
+Status: **available / selected**
+
+Model: **MZ966**
 
 Role:
 
 - future bypass/routing dampers
 - possible branch isolation if the axial opposed-fan architecture has excessive stopped-fan drag
+
+Known project supply:
+
+- servo rail: **6 V**
+- source: LK1263 DC/DC converter
+- rail limit: **3 A total**
+
+Important verification note:
+
+A reliable exact public MZ966 datasheet was not found in the current web search. Do not substitute specifications from a different Miuzei servo model as if they were MZ966 data.
+
+Open checks:
+
+- exact MZ966 operating-voltage range
+- stall current at 6 V
+- running current at representative damper load
+- PWM pulse range and refresh-frequency requirements
+- mechanical dimensions / horn spline if CAD mounting is to be frozen
+- number of servos that may move simultaneously
 
 ### DC/DC voltage converter LK1263
 
