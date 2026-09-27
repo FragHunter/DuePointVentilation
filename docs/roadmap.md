@@ -82,38 +82,51 @@ Goal: safely control one intake and one exhaust fan through the selected GLEDOPT
 - [ ] safe state after Node-RED/MQTT loss
 - [ ] optional actual-state feedback
 
-## M6 — Active cross ventilation
+## M6 — Two-room paired pendulum ventilation
 
-- [ ] operate intake and exhaust as coordinated pair
-- [ ] symmetric speed mode
+- [x] define two modules in two rooms as one pendulum pair
+- [ ] define pair state machine
+- [ ] phase A: room A SUPPLY / room B EXHAUST
+- [ ] phase B: room A EXHAUST / room B SUPPLY
+- [ ] configurable pendulum phase duration
+- [ ] direction-change dead-time
+- [ ] atomic/synchronized pair switching in Node-RED
+- [ ] safe restart/recovery behavior
+- [ ] degraded mode if one module/controller fails
 - [ ] ramp-up / ramp-down
 - [ ] configurable minimum fan speed
 - [ ] configurable maximum fan speed
-- [ ] test room airflow direction
-- [ ] test interaction with doors/windows/passive leaks
+- [ ] verify that inactive fan/routing does not create excessive restriction or bypass
+- [ ] test pressure balance between rooms
+- [ ] test interaction with closed doors / transfer-air paths
 - [ ] quantify effective airflow if possible
 
-## M6A — 3D-printed heat exchanger
+## M6A — 3D-printed regenerative heat-storage core
 
 See [heat-exchanger.md](heat-exchanger.md).
 
+- [x] switch target architecture from simultaneous cross-flow to regenerative pendulum operation
 - [ ] define target airflow and allowed pressure drop
-- [ ] choose exchanger topology (counter-flow / cross-counter-flow)
+- [ ] define initial pendulum phase duration
+- [ ] define common bidirectional flow path through one core per module
+- [ ] define intake/exhaust fan routing around the same core
 - [ ] define fan/duct interfaces
 - [ ] define maximum core dimensions
 - [ ] select print material and print parameters
-- [ ] design modular exchanger core
+- [ ] design modular regenerative matrix core
+- [ ] evaluate whether printed polymer provides sufficient thermal storage
+- [ ] keep cartridge/housing compatible with alternative ceramic/metal storage inserts if needed
 - [ ] provide condensate collection and drain
 - [ ] design for inspection and cleaning
-- [ ] perform inter-stream air-leak test
-- [ ] measure four exchanger temperatures during prototype testing
-- [ ] calculate/log temperature effectiveness
+- [ ] perform leak/bypass test
+- [ ] log phase-resolved inlet/outlet temperatures
+- [ ] calculate instantaneous and phase-average temperature effectiveness
 - [ ] measure or estimate airflow for each fan-speed point
-- [ ] evaluate pressure drop
+- [ ] evaluate pressure drop in both directions
 - [ ] evaluate condensate and frost behavior
-- [ ] reserve a mechanical bypass path
+- [ ] reserve a mechanical bypass/routing path
 - [ ] decide whether the core is removable/replaceable
-- [ ] iterate CAD based on measured thermal and airflow performance
+- [ ] iterate CAD based on measured thermal, airflow and storage performance
 
 ## M7 — Multi-installation support
 
