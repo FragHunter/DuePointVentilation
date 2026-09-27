@@ -116,12 +116,12 @@ Do **not** connect the servo signal wire to one of the GL-C-211WL high-current L
 
 ## Proposed Node-RED logical command
 
-Use logical positions instead of raw pulse widths:
+For the selected 2+1 fan topology, use **route names** instead of raw pulse widths:
 
 ```json
 {
-  "servo": "bypass_a",
-  "position": "OPEN",
+  "servo": "servo_route",
+  "position": "ROOM_A_SUPPLY_ROOM_B_EXHAUST",
   "sequence": 42,
   "valid_until_ms": 1234567890
 }
@@ -129,11 +129,13 @@ Use logical positions instead of raw pulse widths:
 
 The actuator adapter maps:
 
-- CLOSED -> calibrated closed pulse
-- OPEN -> calibrated open pulse
-- SERVICE -> calibrated service pulse
+- `ROOM_A_SUPPLY_ROOM_B_EXHAUST` -> calibrated route-A pulse
+- `ROOM_B_SUPPLY_ROOM_A_EXHAUST` -> calibrated route-B pulse
+- `SAFE` -> calibrated safe/service position
 
 Raw pulse values remain device configuration, not control-flow logic.
+
+The mechanism is a **coupled double-diverter**: one logical servo command changes both room connections together while keeping the supply and exhaust passages separated.
 
 ## Interlock policy
 
@@ -194,8 +196,12 @@ Do not use the 3 A LK1263 itself as the only instrument for determining stall cu
 
 Until MZ966 measurements exist:
 
+- primary project role: **routing actuator for the servo-routed 2+1 fan topology**
+- position A = room A supply / room B exhaust
+- position B = room B supply / room A exhaust
 - design budget: **2.5 A per active servo at 6 V**
 - only one servo moves at a time on the 3 A rail
 - use 50 Hz / 1500 µs neutral as the starting signal
 - start endpoint calibration at 1000–2000 µs
 - use a GPIO/logic servo pulse, not a GL-C-211WL LED power output
+- measured travel time plus settling margin defines the minimum safe fan dead-time
