@@ -1,0 +1,15 @@
+{
+  "sensors": {
+    "stale_after_ms": 180000
+  },
+  "ventilation": {
+    "start_delta_gm3": 1.0,
+    "stop_delta_gm3": 0.4,
+    "minimum_outdoor_temperature_c": -10.0
+  },
+  "pendulum": {
+    "phase_time_ms": 60000,
+    "dead_time_ms": 3000,
+    "pwm_pct": 65
+  }
+}
