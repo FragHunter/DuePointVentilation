@@ -1,0 +1,70 @@
+name: Build heat exchanger CAD
+
+on:
+  push:
+    paths:
+      - "cad/heat-exchanger/**"
+      - "docs/cad-hx-v1.1.md"
+      - "docs/simulation-hx-v1.1.md"
+      - "docs/printing-anycubic-i3-mega-s.md"
+      - ".github/workflows/cad-heat-exchanger.yml"
+  pull_request:
+    paths:
+      - "cad/heat-exchanger/**"
+      - "docs/cad-hx-v1.1.md"
+      - "docs/simulation-hx-v1.1.md"
+      - "docs/printing-anycubic-i3-mega-s.md"
+      - ".github/workflows/cad-heat-exchanger.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: cad/heat-exchanger
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install CAD dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run CAD, printer-fit and simulation tests
+        run: pytest -q
+
+      - name: Build STEP and STL
+        run: python build.py --config parameters.yaml --out generated
+
+      - name: Check Anycubic i3 Mega S build-volume fit
+        run: |
+          python tools/check_printer_fit.py             --config parameters.yaml             --printer config/printers/anycubic-i3-mega-s.yaml             --out review/generated/printer-fit.json
+
+      - name: Generate section drawings
+        run: |
+          python tools/generate_sections.py             --config parameters.yaml             --out review/generated
+
+      - name: Run engineering screening simulations
+        run: |
+          python tools/simulate_hx.py             --config parameters.yaml             --out simulation/generated
+
+      - name: Upload generated engineering artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: HX-V1.1-engineering
+          path: |
+            cad/heat-exchanger/generated/*.step
+            cad/heat-exchanger/generated/*.stl
+            cad/heat-exchanger/generated/*.json
+            cad/heat-exchanger/review/generated/*
+            cad/heat-exchanger/simulation/generated/*
+          if-no-files-found: error
