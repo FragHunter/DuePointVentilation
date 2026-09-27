@@ -1,5 +1,7 @@
 {
-  "sensors": {"stale_after_ms": 180000},
+  "sensors": {
+    "stale_after_ms": 180000
+  },
   "ventilation": {
     "start_delta_gm3": 1.0,
     "stop_delta_gm3": 0.4,
@@ -10,9 +12,19 @@
     "dead_time_ms": 3000,
     "pwm_pct": 65,
     "calibration": {
-      "room_a": {"supply": 1.0, "exhaust": 1.0},
-      "room_b": {"supply": 1.0, "exhaust": 1.0}
+      "room_a": {
+        "supply": 1.0,
+        "exhaust": 1.0
+      },
+      "room_b": {
+        "supply": 1.0,
+        "exhaust": 1.0
+      }
     }
   },
-  "actuator": {"command_ttl_ms": 5000}
+  "actuator": {
+    "command_ttl_ms": 5000,
+    "servo_travel_ms": null,
+    "servo_settle_ms": 500
+  }
 }

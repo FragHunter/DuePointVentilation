@@ -2,11 +2,17 @@
   "name": "node-red-contrib-duepoint-control",
   "version": "0.1.0",
   "private": true,
-  "description": "Node-RED wrapper for DuePointVentilation control core",
-  "keywords": ["node-red", "dew-point", "ventilation", "pendulum"],
+  "description": "Node-RED wrappers for DuePointVentilation control and actuator interlock",
+  "keywords": [
+    "node-red",
+    "dew-point",
+    "ventilation",
+    "pendulum"
+  ],
   "node-red": {
     "nodes": {
-      "duepoint-control": "nodes/duepoint-control.cjs"
+      "duepoint-control": "nodes/duepoint-control.cjs",
+      "duepoint-actuator": "nodes/duepoint-actuator.cjs"
     }
   }
 }

@@ -9,9 +9,10 @@ Recommended flow stages:
 3. keep latest room A / room B / outdoor measurements
 4. call the control-core step on a periodic tick or sensor update
 5. publish pair state
-6. publish four logical fan targets
-7. WLED adapter converts targets to device commands
-8. log measurements and decisions
+6. pass the logical control command through duepoint-actuator
+7. actuator interlock maps fan banks + V0.3 route and independently enforces servo settle timing
+8. WLED/GPIO protocol adapter converts safe physical targets to device commands
+9. log measurements and decisions
 
 ## Runtime integration
 
@@ -26,10 +27,21 @@ The first importable production flow will be added after the exact Zigbee2MQTT f
 
 ## Actuator adapter safety requirements
 
-The Node-RED/WLED adapter must:
+The project now provides a dedicated duepoint-actuator Node-RED node around the
+tested physical interlock.
 
-- default all outputs to OFF at deployment/reconnect,
-- reject output commands past valid_until_ms,
-- avoid retained non-zero fan target messages,
-- preserve the controller sequence/command ID in telemetry,
-- never bypass STARTUP_DEADTIME or reversal dead-time.
+It:
+
+- defaults all physical fan outputs to OFF after deployment/reconnect,
+- rejects commands past valid_until_ms,
+- rejects sequence regression,
+- maps logical room roles onto supply/exhaust fan banks,
+- commands the ROUTING-V0.3 dual-T-diverter route,
+- independently keeps fans OFF for measured servo travel + settle time,
+- refuses fan release while servo_travel_ms is uncalibrated,
+- preserves command/sequence metadata for downstream telemetry.
+
+The later WLED/GPIO protocol adapter must consume this physical safe output,
+not bypass it with raw logical targets.
+
+Transient non-zero fan commands must not be retained in MQTT.

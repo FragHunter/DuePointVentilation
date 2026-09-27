@@ -96,4 +96,26 @@ Logical room/direction targets remain the MQTT/control contract.
 
 The GL-C-211WL adapter must not expose its three physical channels directly into psychrometric/FSM logic. A hardware-mapping layer translates logical roles to fan_1/fan_2/fan_3 only after the mechanical topology is explicitly configured and validated.
 
-The production map is currently intentionally incomplete until Issue #14 is resolved.
+The logical mapping is resolved by Issue #14. The preferred V0.3 hardware map uses a supply bank (fan_1 + fan_2), an exhaust bank (fan_3), and two distinct full-area T-diverter units coupled by one logical servo route.
+
+
+## Physical actuator command
+
+The raw logical controller output must pass through the actuator interlock before
+hardware-specific WLED/GPIO translation.
+
+Suggested internal topic:
+
+duepoint/site/<site>/pair/<pair-id>/actuator/target
+
+The physical payload contains accepted/interlock_reason, command freshness
+metadata, fan_1/fan_2/fan_3 percentages, the commanded/stable route, mechanism
+coupled_dual_t_diverter, coupling single_servo_linkage and the two mechanical
+unit IDs supply_t_diverter / exhaust_t_diverter.
+
+While moving, expired, rejected or uncalibrated, all fan percentages are zero.
+
+The hardware-specific WLED/GPIO adapter may command the servo route while fan
+targets are zero, but it must not override the interlock's zero fan targets.
+
+Do not retain non-zero physical actuator messages.

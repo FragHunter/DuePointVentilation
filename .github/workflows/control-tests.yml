@@ -28,3 +28,4 @@ jobs:
           node-version: "20"
       - run: npm test
       - run: node --check node-red/nodes/duepoint-control.cjs
+      - run: node --check node-red/nodes/duepoint-actuator.cjs
