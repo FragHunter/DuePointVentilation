@@ -1,0 +1,24 @@
+revision: HX-V1
+topology: cross_flow_plate_stack
+
+core:
+  width_mm: 180.0
+  depth_mm: 180.0
+  channel_count: 24
+  channel_height_mm: 4.0
+  plate_thickness_mm: 0.45
+  rail_thickness_mm: 0.80
+
+interfaces:
+  fan_nominal_mm: 120
+  duct_nominal_mm: 125
+
+printing:
+  material: TBD
+  nozzle_mm: 0.40
+  layer_height_mm: 0.20
+
+design:
+  removable_core: true
+  condensate_drain_required: true
+  reserve_bypass: true

@@ -1,0 +1,50 @@
+name: Build heat exchanger CAD
+
+on:
+  push:
+    paths:
+      - "cad/heat-exchanger/**"
+      - ".github/workflows/cad-heat-exchanger.yml"
+  pull_request:
+    paths:
+      - "cad/heat-exchanger/**"
+      - ".github/workflows/cad-heat-exchanger.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: cad/heat-exchanger
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install CAD dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run parameter tests
+        run: pytest -q
+
+      - name: Build STEP and STL
+        run: python build.py --config parameters.yaml --out generated
+
+      - name: Upload generated CAD
+        uses: actions/upload-artifact@v4
+        with:
+          name: HX-V1-CAD
+          path: |
+            cad/heat-exchanger/generated/*.step
+            cad/heat-exchanger/generated/*.stl
+            cad/heat-exchanger/generated/*.json
+          if-no-files-found: error
