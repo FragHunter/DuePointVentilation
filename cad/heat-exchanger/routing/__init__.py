@@ -7,6 +7,13 @@ from .coupons import (
     build_seal_gap_coupon,
 )
 from .interfaces import build_p12_fan_pod, build_core_routing_adapter
+from .prototype_parameters import RoutingPrototypeParameters, load_routing_prototype_parameters
+from .prototype import (
+    build_fan_rect_transition,
+    build_supply_merge_collector,
+    build_double_diverter_body,
+    build_diverter_flap_blank,
+)
 
 __all__ = [
     "RoutingCouponParameters",
@@ -16,4 +23,10 @@ __all__ = [
     "build_seal_gap_coupon",
     "build_p12_fan_pod",
     "build_core_routing_adapter",
+    "RoutingPrototypeParameters",
+    "load_routing_prototype_parameters",
+    "build_fan_rect_transition",
+    "build_supply_merge_collector",
+    "build_double_diverter_body",
+    "build_diverter_flap_blank",
 ]

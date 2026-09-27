@@ -210,17 +210,21 @@ Do not mechanically bury the connectors or make electrical separation impossible
 ### R3 — single-lane prototype
 
 - [x] model one modular P12 fan pod
-- [ ] transition/collector
+- [x] model P12-to-rectangular transition
+- [x] model modular two-inlet supply merge collector
 - [x] model one HX-V1.1 core-routing adapter
 - [ ] pressure-drop test
 
 ### R4 — complete 2+1 manifold
 
-- [ ] dual supply fan bank
-- [ ] single exhaust fan bank
-- [ ] coupled double diverter
-- [ ] both core connections
-- [ ] serviceable seals/joints
+- [x] dual-supply-bank packaging geometry proof (two transitions + merge collector)
+- [ ] final single exhaust fan bank
+- [x] coupled double-diverter body geometry proof
+- [x] common-shaft flap blank geometry proof
+- [ ] final branch/core connection flanges
+- [ ] serviceable seals/joints and hard stops
+- [ ] servo mount/linkage integrated into body
+- [ ] condensate low-point/drain details
 
 ### R5 — paired-core bench test
 
@@ -253,6 +257,52 @@ Bench protocol: docs/bench-test-protocol-routing-v0.1.md
 Measurement templates:
 - cad/heat-exchanger/test-data/templates/routing-v0.1-coupon-servo.csv
 - cad/heat-exchanger/test-data/templates/routing-v0.1-airflow.csv
+
+## ROUTING-V0.2 geometry proof
+
+Tracked exports are in cad/heat-exchanger/exports/ROUTING-V0.2/.
+
+New parts:
+
+1. ROUTING-V0.2-fan-rect-transition.stl
+   - print two for the two-fan supply bank
+   - exact CAD envelope: approximately 120 x 120 x 64 mm
+   - existing 112 mm P12 airflow aperture on the fan side
+   - provisional 100 x 48 mm rectangular collector interface
+
+2. ROUTING-V0.2-supply-merge-collector.stl
+   - 120 x 120 x 70 mm
+   - two rectangular supply inlets
+   - common 112 x 112 mm outlet
+   - short internal splitter terminates before the common pressure chamber
+
+3. ROUTING-V0.2-double-diverter-body.stl
+   - 146 x 90 x 146 mm
+   - two physically isolated three-way chambers
+   - common transverse provisional 4.4 mm shaft bore
+   - front common port plus two rear branch ports per chamber
+
+4. ROUTING-V0.2-diverter-flap-blank.stl
+   - print two
+   - one flap blank per chamber
+   - shaft/seal/stop fit remains deliberately provisional
+
+All parts fit the conservative 200 x 200 x 200 mm Mega S envelope.
+
+The center separator is covered by an automated solid/cavity regression test:
+material must remain on the center plane away from the intentional common shaft
+bore, while chamber sample points remain air volume.
+
+The V0.2 build records exact CAD bounding boxes before STL export. CadQuery 2.8
+was observed to mutate an in-memory bounding cache after STL tessellation even
+though the written STL vertex coordinates remained correct; a regression test
+prevents those mutated cache dimensions from entering metadata.
+
+V0.2 is not a production freeze. It proves packaging and air-path separation
+while V0.1 measurements still determine shaft fit, seal gap, linkage radius,
+loaded servo travel/dead-time and the real P12/core interfaces.
+
+Bench protocol: docs/bench-test-protocol-routing-v0.2.md
 
 ## Open measurements before final dimensions
 
