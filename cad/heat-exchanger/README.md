@@ -1,50 +1,56 @@
-# HX-V1 parametric heat exchanger
+# HX-V1 parametric regenerative core
 
-This directory contains the first parametric CAD prototype for the DuePointVentilation air-to-air heat exchanger.
+This directory contains the first parametric CAD prototype for a DuePointVentilation **pendulum heat-storage core**.
 
-## Scope of HX-V1
+## System context
 
-HX-V1 starts deliberately with the **heat-exchanger core**, not the final installation housing.
+Two ventilation modules are installed in two rooms and work as a synchronized pair:
 
-Topology:
+```text
+Phase A:
+  Room A = SUPPLY
+  Room B = EXHAUST
 
-- alternating cross-flow air channels
-- thin separator plates
-- edge rails that seal each channel pair
-- alternating X/Y flow direction
-- fully parameter-driven geometry
-- STEP and STL export with CadQuery
+Phase B:
+  Room A = EXHAUST
+  Room B = SUPPLY
+```
 
-The intent is to establish a geometry that can be generated reproducibly, measured and iterated before manifolds, fan adapters, filter holders, condensate tray and servo bypass are frozen.
+Each module therefore needs a **bidirectional regenerative core**. Warm outgoing room air heats the core; after the phase reversal, incoming outside air recovers part of that stored heat.
+
+HX-V1 now models a straight-channel matrix rather than the earlier simultaneous cross-flow plate concept.
 
 ## Geometry
 
-Each air channel is bounded by two separator plates. Adjacent channels are rotated by 90 degrees:
+The core is a square matrix of straight bidirectional channels:
 
 ```text
-layer 0  outside/supply stream  X direction  ─────►
-layer 1  extract/exhaust stream Y direction       ▲
-layer 2  outside/supply stream  X direction  ─────►
-layer 3  extract/exhaust stream Y direction       ▲
-...
+room / outside
+      │
+      ▼
+┌─────────────────────┐
+│ □ □ □ □ □ □ □ □ □  │
+│ □ □ □ □ □ □ □ □ □  │
+│ □ □ □ □ □ □ □ □ □  │
+│ □ □ □ □ □ □ □ □ □  │
+└─────────────────────┘
+      │
+      ▼
+outside / room
 ```
 
-The two streams therefore remain separated by printed plates while crossing thermally.
+The same channels are used in both directions.
+
+The current dimensions are provisional. They exist so we can generate, print and measure a first specimen while airflow, installation envelope and material are still being finalized.
 
 ## Build
-
-Create a virtual environment and install the CAD requirements:
 
 ```bash
 python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
-```
-
-Generate the current revision:
-
-```bash
 python build.py --config parameters.yaml --out generated
+pytest -q
 ```
 
 Outputs:
@@ -53,34 +59,42 @@ Outputs:
 - `generated/HX-V1-core.stl`
 - `generated/HX-V1-metadata.json`
 
-Run checks:
+GitHub Actions builds the same artifacts automatically.
 
-```bash
-pytest -q
-```
+## Current prototype assumptions
 
-GitHub Actions performs the same build and publishes the generated STEP/STL files as a workflow artifact.
+- 120 mm class fan interface
+- one common bidirectional airflow path through each core
+- 18 × 18 straight channels
+- 160 mm provisional core length
+- 0.60 mm provisional printed walls
+- removable cartridge concept
+- two identical cores, one per room module
 
-## Important prototype limitations
+These values are **not final design values**.
 
-HX-V1 is **not yet a production-ready ventilator**.
+## Important engineering point
 
-Before installation, later revisions must add and validate:
+A pendulum exchanger is a **regenerator**, so thermal storage matters in addition to heat-transfer area and pressure drop.
 
-- intake/exhaust plenums
-- 120 mm fan/duct adapters
+A fully printed polymer matrix may have insufficient heat capacity / conductivity compared with ceramic or metallic regenerative media. HX-V1 deliberately keeps the core modular so that later revisions can either:
+
+1. optimize the printed matrix, or
+2. retain the printed housing while using a ceramic/metal/high-thermal-mass insert.
+
+We will decide from measurements rather than assumption.
+
+## Next mechanical work
+
+- intake/exhaust fan routing through the same core
+- determine how the inactive fan is isolated from the airflow
+- 120 mm fan / 125 mm duct adapters
 - condensate collection and drain
-- removable sealing interfaces
-- outside-air filter holder
-- inter-stream leak test
-- pressure-drop measurement
-- actual airflow measurement
-- cleaning access
-- frost behavior
-- optional bypass path and servo damper
+- filter interface
+- cartridge seals
+- future servo-controlled routing/bypass
+- pressure-drop and airflow measurement
+- phase-resolved temperature measurement
+- frost testing
 
-The first printed core is a geometry and manufacturing prototype.
-
-## Design rule
-
-Do not optimize only for heat-transfer area. Channel height, surface area, pressure drop and fan operating point must be evaluated together.
+See `docs/heat-exchanger.md` and Issue #2.

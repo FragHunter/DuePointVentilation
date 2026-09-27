@@ -13,75 +13,89 @@ class HeatExchangerParameters:
     topology: str
     width_mm: float
     depth_mm: float
-    channel_count: int
-    channel_height_mm: float
-    plate_thickness_mm: float
-    rail_thickness_mm: float
+    length_mm: float
+    cells_x: int
+    cells_y: int
+    wall_thickness_mm: float
     fan_nominal_mm: float
     duct_nominal_mm: float
+    phase_time_s: float
+    switch_deadtime_s: float
     material: str
     nozzle_mm: float
     layer_height_mm: float
     removable_core: bool
     condensate_drain_required: bool
     reserve_bypass: bool
+    paired_modules: int
 
     @property
-    def plate_count(self) -> int:
-        return self.channel_count + 1
-
-    @property
-    def total_height_mm(self) -> float:
+    def channel_width_mm(self) -> float:
         return (
-            self.plate_count * self.plate_thickness_mm
-            + self.channel_count * self.channel_height_mm
+            self.width_mm - (self.cells_x + 1) * self.wall_thickness_mm
+        ) / self.cells_x
+
+    @property
+    def channel_depth_mm(self) -> float:
+        return (
+            self.depth_mm - (self.cells_y + 1) * self.wall_thickness_mm
+        ) / self.cells_y
+
+    @property
+    def channel_count(self) -> int:
+        return self.cells_x * self.cells_y
+
+    @property
+    def open_area_mm2(self) -> float:
+        return (
+            self.channel_count
+            * self.channel_width_mm
+            * self.channel_depth_mm
         )
 
     @property
-    def x_flow_channels(self) -> int:
-        return (self.channel_count + 1) // 2
+    def frontal_area_mm2(self) -> float:
+        return self.width_mm * self.depth_mm
 
     @property
-    def y_flow_channels(self) -> int:
-        return self.channel_count // 2
+    def open_area_ratio(self) -> float:
+        return self.open_area_mm2 / self.frontal_area_mm2
 
     @property
-    def x_flow_open_area_mm2(self) -> float:
-        useful_width = self.depth_mm - 2.0 * self.rail_thickness_mm
-        return self.x_flow_channels * useful_width * self.channel_height_mm
-
-    @property
-    def y_flow_open_area_mm2(self) -> float:
-        useful_width = self.width_mm - 2.0 * self.rail_thickness_mm
-        return self.y_flow_channels * useful_width * self.channel_height_mm
-
-    @property
-    def gross_transfer_area_m2(self) -> float:
-        # Approximate two-sided channel contact area. This is intentionally a
-        # gross geometric metric, not a prediction of thermal effectiveness.
+    def gross_internal_surface_area_m2(self) -> float:
+        perimeter_mm = 2.0 * (
+            self.channel_width_mm + self.channel_depth_mm
+        )
         return (
-            2.0
-            * self.channel_count
-            * self.width_mm
-            * self.depth_mm
+            self.channel_count
+            * perimeter_mm
+            * self.length_mm
             / 1_000_000.0
         )
 
+    @property
+    def approximate_solid_volume_cm3(self) -> float:
+        gross_mm3 = self.width_mm * self.depth_mm * self.length_mm
+        open_mm3 = self.open_area_mm2 * self.length_mm
+        return (gross_mm3 - open_mm3) / 1000.0
+
     def validate(self) -> None:
-        if self.topology != "cross_flow_plate_stack":
+        if self.topology != "regenerative_matrix":
             raise ValueError(f"Unsupported topology: {self.topology}")
-        if self.width_mm <= 0 or self.depth_mm <= 0:
-            raise ValueError("Core width/depth must be positive")
-        if self.channel_count < 2:
-            raise ValueError("At least two channels are required")
-        if self.channel_height_mm <= 0:
-            raise ValueError("Channel height must be positive")
-        if self.plate_thickness_mm <= 0:
-            raise ValueError("Plate thickness must be positive")
-        if self.rail_thickness_mm <= 0:
-            raise ValueError("Rail thickness must be positive")
-        if 2.0 * self.rail_thickness_mm >= min(self.width_mm, self.depth_mm):
-            raise ValueError("Rails consume the entire flow opening")
+        if self.width_mm <= 0 or self.depth_mm <= 0 or self.length_mm <= 0:
+            raise ValueError("Core dimensions must be positive")
+        if self.cells_x < 1 or self.cells_y < 1:
+            raise ValueError("At least one channel is required in each axis")
+        if self.wall_thickness_mm <= 0:
+            raise ValueError("Wall thickness must be positive")
+        if self.channel_width_mm <= 0 or self.channel_depth_mm <= 0:
+            raise ValueError("Wall/cell geometry leaves no open airflow channel")
+        if self.phase_time_s <= 0:
+            raise ValueError("Pendulum phase time must be positive")
+        if self.switch_deadtime_s < 0:
+            raise ValueError("Switch dead-time cannot be negative")
+        if self.paired_modules != 2:
+            raise ValueError("HX-V1 currently models exactly two paired modules")
         if self.nozzle_mm <= 0 or self.layer_height_mm <= 0:
             raise ValueError("Print dimensions must be positive")
 
@@ -98,6 +112,7 @@ def load_parameters(path: str | Path) -> HeatExchangerParameters:
 
     core = _require(data, "core")
     interfaces = _require(data, "interfaces")
+    operation = _require(data, "operation")
     printing = _require(data, "printing")
     design = _require(data, "design")
 
@@ -106,12 +121,14 @@ def load_parameters(path: str | Path) -> HeatExchangerParameters:
         topology=str(_require(data, "topology")),
         width_mm=float(_require(core, "width_mm")),
         depth_mm=float(_require(core, "depth_mm")),
-        channel_count=int(_require(core, "channel_count")),
-        channel_height_mm=float(_require(core, "channel_height_mm")),
-        plate_thickness_mm=float(_require(core, "plate_thickness_mm")),
-        rail_thickness_mm=float(_require(core, "rail_thickness_mm")),
+        length_mm=float(_require(core, "length_mm")),
+        cells_x=int(_require(core, "cells_x")),
+        cells_y=int(_require(core, "cells_y")),
+        wall_thickness_mm=float(_require(core, "wall_thickness_mm")),
         fan_nominal_mm=float(_require(interfaces, "fan_nominal_mm")),
         duct_nominal_mm=float(_require(interfaces, "duct_nominal_mm")),
+        phase_time_s=float(_require(operation, "phase_time_s")),
+        switch_deadtime_s=float(_require(operation, "switch_deadtime_s")),
         material=str(_require(printing, "material")),
         nozzle_mm=float(_require(printing, "nozzle_mm")),
         layer_height_mm=float(_require(printing, "layer_height_mm")),
@@ -120,6 +137,7 @@ def load_parameters(path: str | Path) -> HeatExchangerParameters:
             _require(design, "condensate_drain_required")
         ),
         reserve_bypass=bool(_require(design, "reserve_bypass")),
+        paired_modules=int(_require(design, "paired_modules")),
     )
     params.validate()
     return params

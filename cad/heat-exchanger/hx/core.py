@@ -5,55 +5,80 @@ import cadquery as cq
 from .parameters import HeatExchangerParameters
 
 
-def _box(width: float, depth: float, height: float, z0: float) -> cq.Workplane:
+def _vertical_x_wall(
+    x: float,
+    width: float,
+    depth: float,
+    length: float,
+) -> cq.Workplane:
     return (
         cq.Workplane("XY")
-        .box(width, depth, height, centered=(True, True, False))
-        .translate((0.0, 0.0, z0))
+        .box(width, depth, length, centered=(True, True, False))
+        .translate((x, 0.0, 0.0))
+    )
+
+
+def _vertical_y_wall(
+    y: float,
+    width: float,
+    depth: float,
+    length: float,
+) -> cq.Workplane:
+    return (
+        cq.Workplane("XY")
+        .box(width, depth, length, centered=(True, True, False))
+        .translate((0.0, y, 0.0))
     )
 
 
 def build_core(params: HeatExchangerParameters) -> cq.Workplane:
-    """Build an alternating cross-flow plate-stack heat-exchanger core.
+    """Build a straight-channel regenerative matrix for pendulum airflow.
 
-    Even-numbered channels are open along X. Odd-numbered channels are open
-    along Y. Separator plates isolate adjacent streams.
+    Air flows through the same channels in +Z during one phase and -Z during
+    the opposite phase. The printed grid walls provide heat-transfer surface
+    and thermal mass.
 
-    The model represents the exchanger core only. Plenums, fan adapters,
-    condensate tray and bypass are intentionally separate follow-up parts.
+    This is the core only. Fan routing, seals, condensate handling and bypass
+    remain separate mechanical parts.
     """
 
     params.validate()
 
-    w = params.width_mm
-    d = params.depth_mm
-    ch = params.channel_height_mm
-    pt = params.plate_thickness_mm
-    rt = params.rail_thickness_mm
+    wall = params.wall_thickness_mm
+    cw = params.channel_width_mm
+    cd = params.channel_depth_mm
 
     model: cq.Workplane | None = None
-    z = 0.0
 
-    for channel_index in range(params.channel_count):
-        plate = _box(w, d, pt, z)
-        model = plate if model is None else model.union(plate)
-        z += pt
+    # Walls normal to X.
+    for i in range(params.cells_x + 1):
+        x = (
+            -params.width_mm / 2.0
+            + wall / 2.0
+            + i * (cw + wall)
+        )
+        part = _vertical_x_wall(
+            x=x,
+            width=wall,
+            depth=params.depth_mm,
+            length=params.length_mm,
+        )
+        model = part if model is None else model.union(part)
 
-        if channel_index % 2 == 0:
-            # X-flow: rails run along X at the two Y edges.
-            y = (d - rt) / 2.0
-            rail_a = _box(w, rt, ch, z).translate((0.0, y, 0.0))
-            rail_b = _box(w, rt, ch, z).translate((0.0, -y, 0.0))
-        else:
-            # Y-flow: rails run along Y at the two X edges.
-            x = (w - rt) / 2.0
-            rail_a = _box(rt, d, ch, z).translate((x, 0.0, 0.0))
-            rail_b = _box(rt, d, ch, z).translate((-x, 0.0, 0.0))
+    # Walls normal to Y.
+    for j in range(params.cells_y + 1):
+        y = (
+            -params.depth_mm / 2.0
+            + wall / 2.0
+            + j * (cd + wall)
+        )
+        part = _vertical_y_wall(
+            y=y,
+            width=params.width_mm,
+            depth=wall,
+            length=params.length_mm,
+        )
+        model = part if model is None else model.union(part)
 
-        model = model.union(rail_a).union(rail_b)
-        z += ch
-
-    final_plate = _box(w, d, pt, z)
-    model = final_plate if model is None else model.union(final_plate)
-
+    assert model is not None
     return model.clean()

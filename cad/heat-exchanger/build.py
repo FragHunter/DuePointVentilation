@@ -32,14 +32,29 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
             "y": bbox.ylen,
             "z": bbox.zlen,
         },
-        "channel_count": params.channel_count,
-        "x_flow_channels": params.x_flow_channels,
-        "y_flow_channels": params.y_flow_channels,
-        "x_flow_open_area_mm2": params.x_flow_open_area_mm2,
-        "y_flow_open_area_mm2": params.y_flow_open_area_mm2,
-        "gross_transfer_area_m2": params.gross_transfer_area_m2,
-        "fan_nominal_mm": params.fan_nominal_mm,
-        "duct_nominal_mm": params.duct_nominal_mm,
+        "matrix": {
+            "cells_x": params.cells_x,
+            "cells_y": params.cells_y,
+            "channel_count": params.channel_count,
+            "channel_width_mm": params.channel_width_mm,
+            "channel_depth_mm": params.channel_depth_mm,
+            "wall_thickness_mm": params.wall_thickness_mm,
+            "open_area_mm2": params.open_area_mm2,
+            "open_area_ratio": params.open_area_ratio,
+            "gross_internal_surface_area_m2":
+                params.gross_internal_surface_area_m2,
+            "approximate_solid_volume_cm3":
+                params.approximate_solid_volume_cm3,
+        },
+        "operation": {
+            "paired_modules": params.paired_modules,
+            "phase_time_s": params.phase_time_s,
+            "switch_deadtime_s": params.switch_deadtime_s,
+        },
+        "interfaces": {
+            "fan_nominal_mm": params.fan_nominal_mm,
+            "duct_nominal_mm": params.duct_nominal_mm,
+        },
         "printing": {
             "material": params.material,
             "nozzle_mm": params.nozzle_mm,
