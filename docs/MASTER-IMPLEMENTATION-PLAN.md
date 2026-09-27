@@ -1,6 +1,7 @@
 # DuePointVentilation — Master implementation plan
 
 See also: [GAP-MATRIX.md](GAP-MATRIX.md) for the current cross-workstream list of open gaps, blockers and physical validation tasks.
+See also: [HARDWARE-INVENTORY.md](HARDWARE-INVENTORY.md) for the selected/available hardware and remaining electrical verification items.
 
 This document is the top-level execution plan for the complete project from sensors and psychrometrics through CAD, printing, fan control, Node-RED orchestration, commissioning and later servo/bypass upgrades.
 
@@ -141,7 +142,9 @@ Implemented there:
 ### Required actions
 
 - [ ] Record exact GLEDOPTO/WLED controller model and hardware revision.
-- [ ] Record supply voltage and PSU rating.
+- [x] Record primary PSU: Mean Well LPV-35-12, 12 V / 3 A / 36 W.
+- [x] Record servo DC/DC converter model: LK1263.
+- [ ] Verify LK1263 input/output/current ratings and servo stall-current requirement.
 - [ ] Confirm exact ARCTIC P12 Pro PST variant and quantity.
 - [ ] Confirm current Mega S nozzle is 0.4 mm or update printer profile.
 - [ ] Record available PETG brand/material.
