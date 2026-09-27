@@ -20,7 +20,7 @@ This matrix reflects the current project state across `main`, PR #3 (`cad/hx-v1`
 | Hardware inventory | PSU / power architecture | PARTIAL | Mean Well LPV-35-12 identified: 12 V, 3 A, 36 W; primary 12 V supply | Finish total current/peak budget, fusing, distribution, connectors, cable drop and decide one-vs-two PSU topology | HARDWARE-INVENTORY.md, M0/M1 |
 | Hardware inventory | Exact P12 Pro PST variant/count | BLOCKED / INPUT | Model assumptions + fan gauge CAD | Confirm actual physical fan, connector/pinout, mounting dimensions, quantity per module | #6, #11 |
 | Hardware inventory | Mega S nozzle/filament actual setup | BLOCKED / INPUT | Profile assumes 0.4 mm nozzle + PETG | Confirm installed nozzle and actual PETG brand; tune temperatures/retraction/speed | #11 |
-| Hardware inventory | LK1263 DC/DC converter | PARTIAL / INPUT | Converter selected for Miuzei servo rail | Verify exact electrical ratings, output setting and peak/continuous current capability | HARDWARE-INVENTORY.md, M10 |
+| Hardware inventory | LK1263 DC/DC converter | PARTIAL | Converter output known: 6 V / 3 A, max 18 W | Verify input range/efficiency/thermal derating and compare 3 A limit with actual Miuzei stall + simultaneous peak current | HARDWARE-INVENTORY.md, M10 |
 | Site data | Room A/B volume | BLOCKED / INPUT | No final room-volume data | Measure room dimensions; derive target air-change/flow range | #2, master plan |
 | Site data | Available wall/window opening/envelope | BLOCKED / INPUT | Module envelope known, wall interface not designed | Measure available installation space and wall/opening dimensions | #2, M9 |
 | Site data | Transfer-air path between rooms | BLOCKED / INPUT | Risk documented | Measure/define door undercut, grille or leakage path; test doors open/closed | #2, #4 |
@@ -113,7 +113,7 @@ This matrix reflects the current project state across `main`, PR #3 (`cad/hx-v1`
 | Deployment | Node-RED/MQTT host finalized | BLOCKED / INPUT | Software architecture exists | Record production host/container strategy | M0 |
 | Deployment | Backup/restore | OPEN | None | Back up flows, config, Zigbee2MQTT, MQTT, Influx/Grafana | M9 |
 | Deployment | Release packaging/versioning | OPEN | Branch exports exist | Define first release/tag after prototype validation | Project integration |
-| Servos | Servo supply/controller selection | PARTIAL / LATER | Miuzei 180° planned; LK1263 DC/DC converter identified for servo supply | Verify LK1263 input/output/current/thermal ratings and actual servo voltage + stall current before final wiring | HARDWARE-INVENTORY.md, M10 |
+| Servos | Servo supply/controller selection | PARTIAL / LATER | Miuzei 180° planned; LK1263 provides 6 V / 3 A servo rail | Verify Miuzei allowed voltage, stall current, number of simultaneous servos and LK1263 thermal/continuous-current capability | HARDWARE-INVENTORY.md, M10 |
 | Servos | Damper FSM/interlocks | OPEN / LATER | Desired states documented | Implement OPENING/OPEN/CLOSING/CLOSED + fan interlock | M10 |
 | Adaptive control | Dynamic fan speed from humidity delta | OPEN / LATER | Static PWM today | Implement after airflow calibration/field data | M11 |
 | Adaptive control | Adaptive phase duration | OPEN / LATER | 60 s is placeholder | Tune from measured thermal/moisture performance | M11 |
