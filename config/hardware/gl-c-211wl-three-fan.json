@@ -1,4 +1,5 @@
 {
+  "topology": "servo_routed_2plus1",
   "controller": {
     "id": "gledopto-main",
     "model": "GL-C-211WL",
@@ -9,11 +10,35 @@
     {"id": "fan_2", "channel": 2},
     {"id": "fan_3", "channel": 3}
   ],
-  "logical_role_mapping": {
-    "room_a_supply": null,
-    "room_a_exhaust": null,
-    "room_b_supply": null,
-    "room_b_exhaust": null
+  "fan_groups": {
+    "supply_bank": {
+      "members": ["fan_1", "fan_2"],
+      "shared_pwm_signal_candidate": true
+    },
+    "exhaust_bank": {
+      "members": ["fan_3"],
+      "shared_pwm_signal_candidate": false
+    }
   },
-  "shared_fan_acknowledgements": {}
+  "logical_role_mapping": {
+    "room_a_supply": "supply_bank",
+    "room_b_supply": "supply_bank",
+    "room_a_exhaust": "exhaust_bank",
+    "room_b_exhaust": "exhaust_bank"
+  },
+  "routing": {
+    "actuator_id": "servo_route",
+    "mechanism": "coupled_double_diverter",
+    "fan_off_required_while_moving": true,
+    "safe_position": "SAFE",
+    "positions": {
+      "OFF": "SAFE",
+      "FAULT": "SAFE",
+      "STARTUP_DEADTIME": "ROOM_A_SUPPLY_ROOM_B_EXHAUST",
+      "PHASE_A": "ROOM_A_SUPPLY_ROOM_B_EXHAUST",
+      "DEADTIME_TO_B": "ROOM_B_SUPPLY_ROOM_A_EXHAUST",
+      "PHASE_B": "ROOM_B_SUPPLY_ROOM_A_EXHAUST",
+      "DEADTIME_TO_A": "ROOM_A_SUPPLY_ROOM_B_EXHAUST"
+    }
+  }
 }
