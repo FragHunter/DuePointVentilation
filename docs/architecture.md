@@ -40,6 +40,14 @@
        ┌──────┴──────┐
        ▼             ▼
   intake fan     exhaust fan
+       \             /
+        \           /
+         ▼         ▼
+       3D-printed air-to-air
+          heat exchanger
+         /             \
+        ▼               ▼
+  supply to room    exhaust outside
 
 Future actuator path:
 Node-RED → servo adapter → intake/exhaust dampers
@@ -143,7 +151,11 @@ Initial concepts:
 - no automatic ventilation if a required sensor is stale or invalid
 - manual override must expire automatically
 
-## Cross ventilation
+## Cross ventilation and heat recovery
+
+Each zone uses an active intake and an active exhaust fan. The mechanical air paths may pass through a printed air-to-air heat exchanger. The exchanger remains a mechanical subsystem: Node-RED still decides ventilation from the indoor/outdoor moisture state, while heat recovery reduces thermal losses.
+
+Condensate handling, pressure drop, exchanger leakage and frost behavior are treated as explicit design/test items. The architecture reserves a future bypass path that can be actuated by the planned servo subsystem.
 
 Each zone uses an active intake and an active exhaust fan.
 
