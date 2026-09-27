@@ -1,6 +1,6 @@
-# HX-V1 parametric regenerative core
+# HX-V1 parametric regenerative core and module
 
-This directory contains the first parametric CAD prototype for a DuePointVentilation **pendulum heat-storage core**.
+This directory contains the parametric CAD prototype for a DuePointVentilation **pendulum heat-storage module**.
 
 ## System context
 
@@ -16,32 +16,48 @@ Phase B:
   Room B = SUPPLY
 ```
 
-Each module therefore needs a **bidirectional regenerative core**. Warm outgoing room air heats the core; after the phase reversal, incoming outside air recovers part of that stored heat.
+Each module uses a bidirectional regenerative core. Warm outgoing room air heats the core; after the phase reversal, incoming outside air recovers part of that stored heat.
 
-HX-V1 now models a straight-channel matrix rather than the earlier simultaneous cross-flow plate concept.
+## HX-V1 core
 
-## Geometry
+The current core is a square matrix of straight bidirectional channels. The same channels are used in both directions.
 
-The core is a square matrix of straight bidirectional channels:
+Provisional parameters:
+
+- 120 × 120 × 160 mm core
+- 18 × 18 channels
+- 0.60 mm printed walls
+- removable cartridge concept
+
+These are development values, not final production dimensions.
+
+## HX-V1 module shell
+
+A first **axial opposed-fan** housing is now generated around the core:
 
 ```text
-room / outside
-      │
-      ▼
-┌─────────────────────┐
-│ □ □ □ □ □ □ □ □ □  │
-│ □ □ □ □ □ □ □ □ □  │
-│ □ □ □ □ □ □ □ □ □  │
-│ □ □ □ □ □ □ □ □ □  │
-└─────────────────────┘
-      │
-      ▼
-outside / room
+ROOM
+  │
+  ▼
+[ P12 fan: EXHAUST direction ]
+  │
+  │ 45 mm plenum
+  ▼
+[ regenerative core ]
+  ▲
+  │ 45 mm plenum
+  │
+[ P12 fan: SUPPLY direction ]
+  ▲
+  │
+OUTSIDE
 ```
 
-The same channels are used in both directions.
+Only one directional fan runs in each phase.
 
-The current dimensions are provisional. They exist so we can generate, print and measure a first specimen while airflow, installation envelope and material are still being finalized.
+This is deliberately the mechanically simplest baseline. It has one important drawback: the inactive fan remains in the airflow path. We therefore must measure its pressure loss before accepting this topology. If the loss is excessive, the next CAD variant will use parallel fan branches with passive or servo-actuated routing.
+
+Current shell envelope is roughly 129 × 129 × 258 mm before the actual fan bodies, filter, drain and external mounting parts are added.
 
 ## Build
 
@@ -57,44 +73,29 @@ Outputs:
 
 - `generated/HX-V1-core.step`
 - `generated/HX-V1-core.stl`
+- `generated/HX-V1-module-shell.step`
+- `generated/HX-V1-module-shell.stl`
 - `generated/HX-V1-metadata.json`
 
 GitHub Actions builds the same artifacts automatically.
 
-## Current prototype assumptions
+## Thermal-storage note
 
-- 120 mm class fan interface
-- one common bidirectional airflow path through each core
-- 18 × 18 straight channels
-- 160 mm provisional core length
-- 0.60 mm provisional printed walls
-- removable cartridge concept
-- two identical cores, one per room module
+A pendulum exchanger is a regenerator, so thermal storage matters in addition to heat-transfer area and pressure drop.
 
-These values are **not final design values**.
-
-## Important engineering point
-
-A pendulum exchanger is a **regenerator**, so thermal storage matters in addition to heat-transfer area and pressure drop.
-
-A fully printed polymer matrix may have insufficient heat capacity / conductivity compared with ceramic or metallic regenerative media. HX-V1 deliberately keeps the core modular so that later revisions can either:
-
-1. optimize the printed matrix, or
-2. retain the printed housing while using a ceramic/metal/high-thermal-mass insert.
-
-We will decide from measurements rather than assumption.
+A fully printed polymer matrix may have insufficient thermal conductivity or heat capacity compared with ceramic or metallic regenerative media. The design stays modular so later revisions can either optimize the printed matrix or retain the printed housing with a different storage insert.
 
 ## Next mechanical work
 
-- intake/exhaust fan routing through the same core
-- determine how the inactive fan is isolated from the airflow
-- 120 mm fan / 125 mm duct adapters
-- condensate collection and drain
-- filter interface
-- cartridge seals
-- future servo-controlled routing/bypass
-- pressure-drop and airflow measurement
-- phase-resolved temperature measurement
-- frost testing
+- benchmark pressure drop through an inactive P12 Pro PST
+- confirm exact P12 Pro PST mounting dimensions
+- add core cartridge stops/seals
+- split shell into printable/serviceable halves
+- add condensate collection and drain
+- add filter interface
+- add wall/window mounting interface
+- compare axial opposed-fan routing with a branched/damper version
+- add future Miuzei servo mounting points
+- measure phase-resolved temperatures, airflow and frost behavior
 
-See `docs/heat-exchanger.md` and Issue #2.
+See `docs/heat-exchanger.md`, Issue #2 and Issue #4.

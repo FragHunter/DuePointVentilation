@@ -21,6 +21,14 @@ class HeatExchangerParameters:
     duct_nominal_mm: float
     phase_time_s: float
     switch_deadtime_s: float
+    routing_variant: str
+    core_clearance_mm: float
+    shell_wall_mm: float
+    plenum_length_mm: float
+    fan_plate_thickness_mm: float
+    fan_aperture_mm: float
+    fan_hole_spacing_mm: float
+    fan_hole_diameter_mm: float
     material: str
     nozzle_mm: float
     layer_height_mm: float
@@ -79,6 +87,30 @@ class HeatExchangerParameters:
         open_mm3 = self.open_area_mm2 * self.length_mm
         return (gross_mm3 - open_mm3) / 1000.0
 
+    @property
+    def module_passage_width_mm(self) -> float:
+        return self.width_mm + self.core_clearance_mm
+
+    @property
+    def module_passage_depth_mm(self) -> float:
+        return self.depth_mm + self.core_clearance_mm
+
+    @property
+    def module_outer_mm(self) -> float:
+        return max(
+            self.module_passage_width_mm + 2.0 * self.shell_wall_mm,
+            self.module_passage_depth_mm + 2.0 * self.shell_wall_mm,
+            self.fan_nominal_mm + 8.0,
+        )
+
+    @property
+    def module_body_length_mm(self) -> float:
+        return self.length_mm + 2.0 * self.plenum_length_mm
+
+    @property
+    def module_total_length_mm(self) -> float:
+        return self.module_body_length_mm + 2.0 * self.fan_plate_thickness_mm
+
     def validate(self) -> None:
         if self.topology != "regenerative_matrix":
             raise ValueError(f"Unsupported topology: {self.topology}")
@@ -96,6 +128,16 @@ class HeatExchangerParameters:
             raise ValueError("Switch dead-time cannot be negative")
         if self.paired_modules != 2:
             raise ValueError("HX-V1 currently models exactly two paired modules")
+        if self.routing_variant != "axial_opposed_fans":
+            raise ValueError(f"Unsupported routing variant: {self.routing_variant}")
+        if self.core_clearance_mm <= 0 or self.shell_wall_mm <= 0:
+            raise ValueError("Module clearance/wall dimensions must be positive")
+        if self.plenum_length_mm < 0 or self.fan_plate_thickness_mm <= 0:
+            raise ValueError("Module length dimensions are invalid")
+        if not 0 < self.fan_aperture_mm < self.module_outer_mm:
+            raise ValueError("Fan aperture must fit inside the module")
+        if self.fan_hole_spacing_mm <= 0 or self.fan_hole_diameter_mm <= 0:
+            raise ValueError("Fan mount dimensions must be positive")
         if self.nozzle_mm <= 0 or self.layer_height_mm <= 0:
             raise ValueError("Print dimensions must be positive")
 
@@ -113,6 +155,7 @@ def load_parameters(path: str | Path) -> HeatExchangerParameters:
     core = _require(data, "core")
     interfaces = _require(data, "interfaces")
     operation = _require(data, "operation")
+    module = _require(data, "module")
     printing = _require(data, "printing")
     design = _require(data, "design")
 
@@ -129,6 +172,16 @@ def load_parameters(path: str | Path) -> HeatExchangerParameters:
         duct_nominal_mm=float(_require(interfaces, "duct_nominal_mm")),
         phase_time_s=float(_require(operation, "phase_time_s")),
         switch_deadtime_s=float(_require(operation, "switch_deadtime_s")),
+        routing_variant=str(_require(module, "routing_variant")),
+        core_clearance_mm=float(_require(module, "core_clearance_mm")),
+        shell_wall_mm=float(_require(module, "shell_wall_mm")),
+        plenum_length_mm=float(_require(module, "plenum_length_mm")),
+        fan_plate_thickness_mm=float(
+            _require(module, "fan_plate_thickness_mm")
+        ),
+        fan_aperture_mm=float(_require(module, "fan_aperture_mm")),
+        fan_hole_spacing_mm=float(_require(module, "fan_hole_spacing_mm")),
+        fan_hole_diameter_mm=float(_require(module, "fan_hole_diameter_mm")),
         material=str(_require(printing, "material")),
         nozzle_mm=float(_require(printing, "nozzle_mm")),
         layer_height_mm=float(_require(printing, "layer_height_mm")),

@@ -17,6 +17,16 @@ operation:
   phase_time_s: 60
   switch_deadtime_s: 3
 
+module:
+  routing_variant: axial_opposed_fans
+  core_clearance_mm: 0.80
+  shell_wall_mm: 4.0
+  plenum_length_mm: 45.0
+  fan_plate_thickness_mm: 4.0
+  fan_aperture_mm: 112.0
+  fan_hole_spacing_mm: 105.0
+  fan_hole_diameter_mm: 4.5
+
 printing:
   material: TBD
   nozzle_mm: 0.40

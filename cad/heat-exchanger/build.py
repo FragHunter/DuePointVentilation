@@ -6,32 +6,38 @@ from pathlib import Path
 
 from cadquery import exporters
 
-from hx import build_core, load_parameters
+from hx import build_core, build_module_shell, load_parameters
+
+
+def _bbox(shape) -> dict[str, float]:
+    bb = shape.val().BoundingBox()
+    return {"x": bb.xlen, "y": bb.ylen, "z": bb.zlen}
 
 
 def build(config_path: Path, out_dir: Path) -> dict[str, object]:
     params = load_parameters(config_path)
     core = build_core(params)
+    module_shell = build_module_shell(params)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     prefix = params.revision
 
-    step_path = out_dir / f"{prefix}-core.step"
-    stl_path = out_dir / f"{prefix}-core.stl"
+    core_step_path = out_dir / f"{prefix}-core.step"
+    core_stl_path = out_dir / f"{prefix}-core.stl"
+    module_step_path = out_dir / f"{prefix}-module-shell.step"
+    module_stl_path = out_dir / f"{prefix}-module-shell.stl"
     metadata_path = out_dir / f"{prefix}-metadata.json"
 
-    exporters.export(core, str(step_path))
-    exporters.export(core, str(stl_path))
+    exporters.export(core, str(core_step_path))
+    exporters.export(core, str(core_stl_path))
+    exporters.export(module_shell, str(module_step_path))
+    exporters.export(module_shell, str(module_stl_path))
 
-    bbox = core.val().BoundingBox()
     metadata = {
         "revision": params.revision,
         "topology": params.topology,
-        "dimensions_mm": {
-            "x": bbox.xlen,
-            "y": bbox.ylen,
-            "z": bbox.zlen,
-        },
+        "core_dimensions_mm": _bbox(core),
+        "module_shell_dimensions_mm": _bbox(module_shell),
         "matrix": {
             "cells_x": params.cells_x,
             "cells_y": params.cells_y,
@@ -50,6 +56,18 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
             "paired_modules": params.paired_modules,
             "phase_time_s": params.phase_time_s,
             "switch_deadtime_s": params.switch_deadtime_s,
+        },
+        "module": {
+            "routing_variant": params.routing_variant,
+            "core_clearance_mm": params.core_clearance_mm,
+            "shell_wall_mm": params.shell_wall_mm,
+            "plenum_length_mm": params.plenum_length_mm,
+            "fan_plate_thickness_mm": params.fan_plate_thickness_mm,
+            "fan_aperture_mm": params.fan_aperture_mm,
+            "fan_hole_spacing_mm": params.fan_hole_spacing_mm,
+            "fan_hole_diameter_mm": params.fan_hole_diameter_mm,
+            "baseline_warning":
+                "inactive axial fan remains in airflow path; benchmark pressure drop",
         },
         "interfaces": {
             "fan_nominal_mm": params.fan_nominal_mm,
