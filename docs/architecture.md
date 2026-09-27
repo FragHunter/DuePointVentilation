@@ -37,48 +37,72 @@
 │ WLED / GLEDOPTO         │   │ InfluxDB/Grafana│
 └─────────────┬───────────┘   └─────────────────┘
               │
-       ┌──────┴──────┐
-       ▼             ▼
-  intake fan     exhaust fan
-       \             /
-        \           /
-         ▼         ▼
-       3D-printed air-to-air
-          heat exchanger
-         /             \
-        ▼               ▼
-  supply to room    exhaust outside
+       ┌────────────────────────────────────┐
+       │ paired pendulum ventilation group  │
+       └───────────────┬────────────────────┘
+                       │
+           ┌───────────┴───────────┐
+           ▼                       ▼
+     Room A module            Room B module
+   intake + exhaust         intake + exhaust
+          fan pair                 fan pair
+           │                       │
+           ▼                       ▼
+     regenerative             regenerative
+     heat-store core          heat-store core
+           │                       │
+           ▼                       ▼
+        outside                  outside
+
+Phase 1: Room A SUPPLY, Room B EXHAUST
+Phase 2: Room A EXHAUST, Room B SUPPLY
 
 Future actuator path:
-Node-RED → servo adapter → intake/exhaust dampers
+Node-RED → servo adapter → directional/bypass dampers
 ```
 
-## Installation model
+## Installation and pair model
 
-One installation is one controlled ventilation zone.
+One physical module belongs to one room. Two modules in two rooms form one **pendulum pair**.
+
+Each module has two directional fans as already planned:
+
+- intake fan for SUPPLY
+- exhaust fan for EXHAUST
+
+Only the fan required for the active direction is commanded during normal pendulum operation.
 
 ```yaml
-installation:
-  id: cellar-east
+pendulum_pair:
+  id: cellar-pair-1
+  phase_time_s: 60
+  switch_deadtime_s: 3
 
-  sensors:
-    indoor: aqara-cellar-east
-    outdoor: aqara-outside-north
+  modules:
+    - id: cellar-room-a
+      sensor: aqara-cellar-room-a
+      outdoor_sensor: aqara-outside-north
+      intake_fan:
+        controller: wled-room-a
+        channel: 0
+      exhaust_fan:
+        controller: wled-room-a
+        channel: 1
 
-  fans:
-    intake:
-      controller: wled-cellar-east
-      channel: 0
-
-    exhaust:
-      controller: wled-cellar-east
-      channel: 1
-
-  dampers:
-    enabled: false
+    - id: cellar-room-b
+      sensor: aqara-cellar-room-b
+      outdoor_sensor: aqara-outside-north
+      intake_fan:
+        controller: wled-room-b
+        channel: 0
+      exhaust_fan:
+        controller: wled-room-b
+        channel: 1
 ```
 
-Outdoor sensors may be shared between several zones.
+Outdoor sensors may be shared between both rooms and additional pairs.
+
+The exact phase duration remains configurable and must be tuned from heat-storage performance, airflow and comfort measurements.
 
 ## Control inputs
 
@@ -101,19 +125,25 @@ Derived:
 
 ## Control output
 
-The controller emits logical targets independent of hardware:
+The controller emits pair-aware logical targets independent of hardware.
+
+Example phase 1:
 
 ```json
 {
-  "installation_id": "cellar-east",
-  "state": "VENTILATING",
+  "pair_id": "cellar-pair-1",
+  "state": "PENDULUM_PHASE_A",
   "reason": "OUTSIDE_AIR_DRIER",
-  "intake_pct": 65,
-  "exhaust_pct": 65
+  "modules": {
+    "cellar-room-a": {"mode": "SUPPLY", "intake_pct": 65, "exhaust_pct": 0},
+    "cellar-room-b": {"mode": "EXHAUST", "intake_pct": 0, "exhaust_pct": 65}
+  }
 }
 ```
 
-The WLED adapter maps these logical targets to the actual GLEDOPTO controller.
+After the configured phase time and a short dead-time, the roles swap.
+
+The WLED adapter maps these logical targets to the actual GLEDOPTO controllers.
 
 ## Initial state machine
 
@@ -151,27 +181,46 @@ Initial concepts:
 - no automatic ventilation if a required sensor is stale or invalid
 - manual override must expire automatically
 
-## Cross ventilation and heat recovery
+## Paired pendulum ventilation and heat recovery
 
-Each zone uses an active intake and an active exhaust fan. The mechanical air paths may pass through a printed air-to-air heat exchanger. The exchanger remains a mechanical subsystem: Node-RED still decides ventilation from the indoor/outdoor moisture state, while heat recovery reduces thermal losses.
-
-Condensate handling, pressure drop, exchanger leakage and frost behavior are treated as explicit design/test items. The architecture reserves a future bypass path that can be actuated by the planned servo subsystem.
-
-Each zone uses an active intake and an active exhaust fan.
-
-Initial mode:
+The primary operating mode uses **two modules in two rooms**.
 
 ```text
-intake target == exhaust target
+PHASE A
+Room A: outside ──► core ──► room      (SUPPLY)
+Room B: room ─────► core ──► outside   (EXHAUST)
+
+          wait / switch dead-time
+
+PHASE B
+Room A: room ─────► core ──► outside   (EXHAUST)
+Room B: outside ──► core ──► room      (SUPPLY)
 ```
 
-Later modes may deliberately create a small pressure bias:
+This keeps the pair approximately volume-balanced while each local heat-storage core alternately:
 
-- exhaust-dominant
-- intake-dominant
-- adaptive balancing
+1. absorbs heat from outgoing room air, then
+2. releases that heat into incoming outside air.
 
-Those modes must be explicit configuration, not accidental mismatched PWM values.
+This is a **regenerative** heat-recovery concept, not a simultaneous two-stream plate exchanger.
+
+Node-RED owns the pair phase state and must switch both rooms atomically enough that we do not intentionally leave both modules in SUPPLY or both in EXHAUST.
+
+Required control concepts:
+
+- configurable phase duration
+- short all-off dead-time during direction changes
+- paired phase synchronization
+- safe recovery after Node-RED/controller restart
+- degraded/fault mode if one module is unavailable
+- explicit manual test mode
+- optional asymmetric PWM only when intentionally configured
+
+A pressure-balanced pair still needs a real air-transfer path through the building/rooms. Closed doors and highly sealed rooms can change the actual pressure and airflow behavior and must be tested.
+
+The mechanical design must also ensure that the inactive fan does not create an unacceptable bypass or pressure restriction. This depends on whether the two directional fans share one duct/core or use separate routed paths and is a key CAD decision.
+
+Condensate handling, pressure drop, thermal-storage performance and frost behavior remain explicit design/test items.
 
 ## Hardware abstraction
 
