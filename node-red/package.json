@@ -12,7 +12,8 @@
   "node-red": {
     "nodes": {
       "duepoint-control": "nodes/duepoint-control.cjs",
-      "duepoint-actuator": "nodes/duepoint-actuator.cjs"
+      "duepoint-actuator": "nodes/duepoint-actuator.cjs",
+      "duepoint-wled": "nodes/duepoint-wled.cjs"
     }
   }
 }

@@ -1,0 +1,31 @@
+<script type="text/javascript">
+RED.nodes.registerType('duepoint-wled', {
+  category: 'network',
+  color: '#cfe2f3',
+  defaults: {
+    name: { value: '' },
+    endpoint: { value: '', required: true }
+  },
+  inputs: 1,
+  outputs: 1,
+  icon: 'bridge.svg',
+  label: function() { return this.name || 'duepoint WLED'; }
+});
+</script>
+
+<script type="text/html" data-template-name="duepoint-wled">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="DuePoint WLED">
+  </div>
+  <div class="form-row">
+    <label for="node-input-endpoint"><i class="fa fa-globe"></i> Endpoint</label>
+    <input type="text" id="node-input-endpoint" placeholder="http://wled-host">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="duepoint-wled">
+  <p>Converts the accepted physical DuePoint actuator output into the DuePoint WLED usermod JSON command.</p>
+  <p>Output is prepared for a standard Node-RED HTTP Request node using POST to /json/state.</p>
+  <p>The node rejects unaccepted actuator outputs, divergent fan_1/fan_2 supply targets and unsupported routes.</p>
+</script>

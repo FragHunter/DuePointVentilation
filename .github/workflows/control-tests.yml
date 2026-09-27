@@ -29,3 +29,4 @@ jobs:
       - run: npm test
       - run: node --check node-red/nodes/duepoint-control.cjs
       - run: node --check node-red/nodes/duepoint-actuator.cjs
+      - run: node --check node-red/nodes/duepoint-wled.cjs

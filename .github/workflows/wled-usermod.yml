@@ -1,0 +1,55 @@
+name: WLED DuePoint usermod
+
+on:
+  push:
+    paths:
+      - "firmware/wled-duepoint/**"
+      - "src/control/wled-command.js"
+      - "test/wled-command.test.js"
+      - "node-red/nodes/duepoint-wled.*"
+      - ".github/workflows/wled-usermod.yml"
+  pull_request:
+    paths:
+      - "firmware/wled-duepoint/**"
+      - "src/control/wled-command.js"
+      - "test/wled-command.test.js"
+      - "node-red/nodes/duepoint-wled.*"
+      - ".github/workflows/wled-usermod.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout DuePointVentilation
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned WLED
+        uses: actions/checkout@v4
+        with:
+          repository: wled/WLED
+          ref: 961961fdde8c22150a0212243621ee71bc9a7639
+          path: WLED
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install test/build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install platformio==6.2.0 pytest
+
+      - name: Static DuePoint usermod contract
+        run: pytest -q firmware/wled-duepoint/tests/test_contract.py
+
+      - name: Build pinned WLED with DuePoint usermod
+        run: firmware/wled-duepoint/validate_against_wled.sh "$GITHUB_WORKSPACE/WLED" "$(command -v pio)"
+
+      - name: Record firmware size
+        run: |
+          ls -lh WLED/.pio/build/duepoint_esp32/firmware.bin
+          test -s WLED/.pio/build/duepoint_esp32/firmware.bin
