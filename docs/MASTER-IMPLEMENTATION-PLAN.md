@@ -71,7 +71,7 @@ P12 fan
 Future expansion:
 
 ```text
-Miuzei 180-degree servos
+Miuzei MZ966 180-degree servos
   |
   +--> bypass damper
   +--> branch/routing damper
@@ -147,7 +147,9 @@ Implemented there:
 - [x] Record primary PSU: Mean Well LPV-35-12, 12 V / 3 A / 36 W.
 - [x] Record servo DC/DC converter model: LK1263.
 - [x] Record LK1263 output: 6 V / 3 A (18 W maximum at stated rating).
-- [ ] Verify LK1263 input range/efficiency/thermal derating and Miuzei stall-current requirement.
+- [x] Record servo model: Miuzei MZ966.
+- [ ] Verify exact MZ966 operating-voltage range, stall/running current and PWM timing requirements.
+- [ ] Verify LK1263 input range/efficiency/thermal derating against the MZ966 load.
 - [ ] Confirm exact ARCTIC P12 Pro PST variant and quantity.
 - [ ] Confirm current Mega S nozzle is 0.4 mm or update printer profile.
 - [ ] Record available PETG brand/material.
@@ -617,7 +619,7 @@ Miuzei 180-degree servo phase.
 ### Electrical
 
 - [x] selected servo supply rail: LK1263 at 6 V / 3 A,
-- [ ] verify Miuzei servo voltage compatibility and stall/peak current against the 3 A rail,
+- [ ] verify MZ966 voltage compatibility, stall/running current and simultaneous peak current against the 3 A rail,
 - [ ] common reference where required,
 - [ ] peak-current sizing,
 - [ ] controller/driver selection.
