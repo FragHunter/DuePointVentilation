@@ -17,9 +17,10 @@ This matrix reflects the current project state across `main`, PR #3 (`cad/hx-v1`
 | Project integration | Merge control/Node-RED core | PARTIAL | Control core + Node-RED wrapper on branch | PR #9 still draft/open; WLED adapter and live Node-RED flow are missing | PR #9 |
 | Project integration | Keep issues synchronized with reality | OPEN | Issues #1/#2/#4/#5/#6/#7/#8/#10/#11 exist | Several issue checklists do not reflect branch implementations yet; update/close only after merge/validation | Open issues |
 | Hardware inventory | Exact GLEDOPTO/WLED controller model | BLOCKED / INPUT | Generic controller abstraction only | Record exact model, hardware revision, WLED version and output topology | Issue #6 |
-| Hardware inventory | PSU / power architecture | BLOCKED / INPUT | No final wiring/power design | Record supply voltage, PSU rating, current budget, fusing, connectors, grounding/common reference | M0/M1 |
+| Hardware inventory | PSU / power architecture | PARTIAL | Mean Well LPV-35-12 identified: 12 V, 3 A, 36 W; primary 12 V supply | Finish total current/peak budget, fusing, distribution, connectors, cable drop and decide one-vs-two PSU topology | HARDWARE-INVENTORY.md, M0/M1 |
 | Hardware inventory | Exact P12 Pro PST variant/count | BLOCKED / INPUT | Model assumptions + fan gauge CAD | Confirm actual physical fan, connector/pinout, mounting dimensions, quantity per module | #6, #11 |
 | Hardware inventory | Mega S nozzle/filament actual setup | BLOCKED / INPUT | Profile assumes 0.4 mm nozzle + PETG | Confirm installed nozzle and actual PETG brand; tune temperatures/retraction/speed | #11 |
+| Hardware inventory | LK1263 DC/DC converter | PARTIAL / INPUT | Converter selected for Miuzei servo rail | Verify exact electrical ratings, output setting and peak/continuous current capability | HARDWARE-INVENTORY.md, M10 |
 | Site data | Room A/B volume | BLOCKED / INPUT | No final room-volume data | Measure room dimensions; derive target air-change/flow range | #2, master plan |
 | Site data | Available wall/window opening/envelope | BLOCKED / INPUT | Module envelope known, wall interface not designed | Measure available installation space and wall/opening dimensions | #2, M9 |
 | Site data | Transfer-air path between rooms | BLOCKED / INPUT | Risk documented | Measure/define door undercut, grille or leakage path; test doors open/closed | #2, #4 |
@@ -112,7 +113,7 @@ This matrix reflects the current project state across `main`, PR #3 (`cad/hx-v1`
 | Deployment | Node-RED/MQTT host finalized | BLOCKED / INPUT | Software architecture exists | Record production host/container strategy | M0 |
 | Deployment | Backup/restore | OPEN | None | Back up flows, config, Zigbee2MQTT, MQTT, Influx/Grafana | M9 |
 | Deployment | Release packaging/versioning | OPEN | Branch exports exist | Define first release/tag after prototype validation | Project integration |
-| Servos | Servo supply/controller selection | OPEN / LATER | Miuzei 180° planned | Size 5 V supply, choose driver/controller | M10 |
+| Servos | Servo supply/controller selection | PARTIAL / LATER | Miuzei 180° planned; LK1263 DC/DC converter identified for servo supply | Verify LK1263 input/output/current/thermal ratings and actual servo voltage + stall current before final wiring | HARDWARE-INVENTORY.md, M10 |
 | Servos | Damper FSM/interlocks | OPEN / LATER | Desired states documented | Implement OPENING/OPEN/CLOSING/CLOSED + fan interlock | M10 |
 | Adaptive control | Dynamic fan speed from humidity delta | OPEN / LATER | Static PWM today | Implement after airflow calibration/field data | M11 |
 | Adaptive control | Adaptive phase duration | OPEN / LATER | 60 s is placeholder | Tune from measured thermal/moisture performance | M11 |
