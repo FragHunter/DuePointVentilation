@@ -109,24 +109,29 @@ Role:
 
 ### DC/DC voltage converter LK1263
 
-Status: **available / selected by user; electrical specifications still to verify**
+Status: **available / selected**
+
+Known project output:
+
+- output voltage: **6 V DC**
+- maximum output current: **3 A**
+- maximum output power at the stated rating: **18 W**
 
 Intended role:
 
-- derive the servo supply from the 12 V system
+- derive the 6 V servo rail from the 12 V LPV-35-12 system
 
 Open checks before wiring:
 
 - input-voltage range
-- adjustable/fixed output voltage
-- maximum continuous output current
-- peak current capability
-- efficiency
+- efficiency at expected load
 - thermal behavior
+- whether 3 A is a continuous rating or requires derating/cooling
 - whether one converter serves all servos or converters are distributed per module
-- exact servo operating voltage and stall current
+- actual Miuzei servo operating-voltage range
+- actual Miuzei stall current and simultaneous-movement peak current
 
-Do not freeze the servo power design until the LK1263 ratings and actual servo current are confirmed.
+Do not freeze the servo power design until the actual servo current is confirmed against the 6 V / 3 A converter limit.
 
 ## Sensors
 
@@ -174,6 +179,6 @@ Open checks:
 
 From the 12 V bus:
 - P12 fan supply / GLEDOPTO-WLED path
-- LK1263 DC/DC converter -> servo supply -> Miuzei servos
+- LK1263 DC/DC converter -> **6 V / 3 A servo rail** -> Miuzei servos
 
-The diagram is architectural only. The final fuse, wiring, distribution and interface design remains open until the GLEDOPTO and LK1263 electrical details are verified.
+The diagram is architectural only. The LK1263 output is now known as 6 V / 3 A; the final fuse, wiring, distribution and servo-current budget remain open until the Miuzei stall/peak current is verified.
