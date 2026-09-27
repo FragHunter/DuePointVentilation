@@ -4,47 +4,56 @@
 
 Aqara Temperature and Humidity Sensor T1 devices remain the initial indoor/outdoor environmental sensors because they are already available for the project.
 
-The next mechanical subsystem is a **3D-printed air-to-air heat exchanger** placed between the active intake and exhaust air paths.
+The next mechanical subsystem is a **3D-printed regenerative heat-storage core** for each of the two pendulum ventilation modules.
 
 ## Purpose
 
 The heat exchanger shall recover sensible heat while the ventilation controller continues to decide **when ventilation is useful for drying** from indoor/outdoor moisture conditions.
 
-A normal plate/counter-flow heat exchanger primarily transfers heat, not water vapor. Therefore:
+In the paired pendulum architecture, each module alternates between exhaust and supply. The same core therefore sees warm room air in one phase and cold outside air in the next phase.
 
+The core works as a **regenerator / thermal store**:
+
+- EXHAUST phase: outgoing room air warms the core
+- SUPPLY phase: incoming outside air recovers heat from the core
+- the second room runs in the opposite direction so the pair remains approximately balanced
 - ventilation eligibility is still based on indoor/outdoor absolute humidity / dew-point logic
-- heat recovery changes the supply-air temperature and therefore its relative humidity
-- condensation inside the exchanger must be expected and managed
-- a condensate drain is part of the design, not an optional afterthought
+- condensation and frost inside the core must be expected and managed
 
 ## Preferred first prototype
 
-Start with a **separated-air-stream plate heat exchanger**, preferably counter-flow or cross-counter-flow.
+Start with a **single-path regenerative matrix core** that is traversed in both directions.
+
+```text
+MODULE A
+
+PHASE 1 / EXHAUST:
+room ─────► fan routing ─────► regenerative core ─────► outside
+                                  stores heat
+
+PHASE 2 / SUPPLY:
+outside ──► fan routing ─────► regenerative core ─────► room
+                                  releases heat
+```
+
+A second identical module in the other room operates 180 degrees out of phase.
 
 Design goals:
 
-- two fully separated air paths
-- low pressure drop
-- large transfer area
-- thin transfer walls
-- no short-circuit between intake and exhaust
-- removable/cleanable core or housing
-- controlled condensate path
-- printable as modules so geometry can be iterated without reprinting the complete installation
-- interfaces sized for the selected intake/exhaust fans and ducts
+- one common heat-storage flow path per module
+- reversible system airflow by selecting intake vs exhaust function
+- low pressure drop in both directions
+- high internal surface area
+- enough thermal mass to store useful heat over one pendulum phase
+- condensate drainage in either flow direction
+- removable/cleanable core or cartridge
+- printable geometry with versioned parameters
+- no large bypass around the core
+- mechanical provision for future servo-controlled routing/bypass
 
-Concept:
+The currently opened cross-flow CadQuery prototype is therefore an exploratory geometry only. The target CAD topology must pivot to a regenerative matrix suitable for alternating flow.
 
-```text
-OUTSIDE AIR ──► intake fan ──►┌─────────────────────┐──► supply to room
-                              │                     │
-                              │  printed heat       │
-                              │  exchanger core     │
-                              │                     │
-ROOM AIR ─────► exhaust fan ─►└─────────────────────┘──► exhaust outside
-```
-
-The final fan placement (push/pull relative to the core) is a test item because noise, leakage and pressure behavior can differ.
+A fully printed polymer core is convenient to prototype, but its heat-storage behavior must be measured. If thermal performance is insufficient, the project can keep the printed housing/manifold while using a denser ceramic, metallic or other high-heat-capacity insert as the storage matrix.
 
 ## Instrumentation during development
 
@@ -75,14 +84,16 @@ The project should calculate and log at least:
 - condensate observations
 - exchanger temperature efficiency
 
-A simple supply-side temperature effectiveness metric:
+For a regenerative core we should evaluate effectiveness over the phase, not only from one steady-state sample.
+
+An initial instantaneous supply-side metric can still be logged:
 
 ```text
-eta_t = (T_supply_after - T_outside_before)
-        / (T_extract_before - T_outside_before)
+eta_t(t) = (T_supply_out(t) - T_outside)
+           / (T_room - T_outside)
 ```
 
-Only use the metric when the denominator is sufficiently large; otherwise the value becomes numerically meaningless.
+The project should additionally calculate a phase-average effectiveness. Only evaluate the metric when the room/outside temperature difference is sufficiently large.
 
 ## Condensation management
 
@@ -191,17 +202,26 @@ A filter interface on the outside-air path should be considered before final mec
 
 ## Open design decisions
 
-Before CAD work starts, resolve:
+Known now:
 
-1. one exchanger per ventilation installation or one central exchanger?
-2. target airflow in m³/h?
-3. room volume and desired air-change rate?
-4. maximum available exchanger dimensions?
-5. 3D printer build volume?
-6. intended filament/material?
-7. preferred duct/fan interface dimensions?
-8. required noise limit?
-9. exchanger mounting orientation?
-10. direct condensate drain available?
-11. should the first revision already include a bypass?
-12. should the heat-exchanger core be replaceable as a cartridge?
+- two modules exist
+- they are installed in two rooms
+- they can operate as a synchronized pendulum pair
+- one module supplies while the other exhausts, then the roles swap
+
+Still to resolve before the final CAD geometry is frozen:
+
+1. do the intake and exhaust fans of one module share one physical duct/core path, or are they on separate routed paths?
+2. target airflow per active module in m³/h?
+3. initial phase duration (for example 30–90 s, to be tuned experimentally)?
+4. room volumes and desired air-change rate?
+5. maximum available module/core dimensions?
+6. 3D printer build volume?
+7. intended filament/material?
+8. preferred duct/fan interface dimensions?
+9. required noise limit?
+10. module mounting orientation?
+11. direct condensate drain available?
+12. should revision 1 already include a bypass/routing flap?
+13. should the heat-storage core be a removable cartridge?
+14. are the two rooms connected by a sufficient transfer-air path when doors are closed?
