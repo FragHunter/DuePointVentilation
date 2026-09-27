@@ -4,7 +4,7 @@ The first software implementation separates deterministic control logic from Nod
 
 ## Pipeline
 
-Aqara T1 / Zigbee2MQTT → normalization → psychrometrics + validation → ventilation eligibility → paired pendulum state machine → logical fan targets → WLED/GLEDOPTO adapter.
+Aqara T1 / Zigbee2MQTT → normalization → psychrometrics + validation → ventilation eligibility → paired pendulum state machine → logical fan targets → hardware mapping → WLED/GLEDOPTO + servo adapter.
 
 The pure JavaScript modules under `src/control/` are unit-tested with Node's built-in test runner. Node-RED will act as the orchestration/wiring layer around this logic.
 
@@ -23,6 +23,7 @@ Current ventilation decisions expose explicit reasons:
 ## Pendulum states
 
 - `OFF`
+- `STARTUP_DEADTIME`
 - `PHASE_A`
 - `DEADTIME_TO_B`
 - `PHASE_B`
@@ -35,30 +36,72 @@ The initial nominal timing is 60 s phase time with 3 s dead-time. Both remain co
 
 ## Restart and direction-change safety
 
-Automatic operation now enters STARTUP_DEADTIME before the first active phase after OFF or FAULT. The same all-off dead-time principle is used between PHASE_A and PHASE_B.
+Automatic operation enters STARTUP_DEADTIME before the first active phase after OFF or FAULT. The same all-off dead-time principle is used between PHASE_A and PHASE_B.
 
 Each transition increments a sequence counter. Actuator output carries a validity deadline so stale commands can be rejected after MQTT/WLED reconnects.
 
+For the servo-routed topology the dead-time is also the mechanical switching window. The adapter must keep the fans off while the route servo is moving. Production dead-time must therefore be at least the measured servo travel time plus settling margin, or later be replaced by positive position feedback.
+
 ## Direction calibration
 
-Per-room/per-direction calibration factors allow later airflow balancing from measured bench data. This avoids assuming that identical PWM values produce identical flow through different fans/modules.
+Per-room/per-direction calibration factors remain available for airflow balancing.
 
-## Three physical fans on one GL-C-211WL
+With the selected 2+1 topology these factors become especially important because two physical fans form the supply bank while one physical fan forms the exhaust bank. The control core may command different PWM demand for supply and exhaust in each phase.
 
-The current hardware inventory contains one GL-C-211WL and three physical P12 fans.
+## Three physical fans with servo routing
 
-The logical pendulum controller still exposes four directional roles:
-- room A supply
-- room A exhaust
-- room B supply
-- room B exhaust
+The selected topology is `servo_routed_2plus1`.
 
-A separate hardware-map layer now validates the mapping from those logical roles to the three physical fan channels.
+Physical fan grouping:
 
-Important behavior:
-- production configuration is intentionally invalid until every logical role is explicitly mapped,
-- sharing one physical fan between logical roles requires explicit mechanical acknowledgement,
-- if two logical roles ever command the same shared fan simultaneously, the mapper throws instead of guessing,
-- the unresolved mapping is tracked in Issue #14.
+- `fan_1` + `fan_2`: parallel **supply bank**
+- `fan_3`: **exhaust bank**
 
-The control FSM remains hardware-independent.
+The fans are not reversed electrically. A coupled two-position air diverter changes which room is connected to the supply bank and which room is connected to the exhaust bank.
+
+### PHASE_A
+
+- supply bank → room A
+- room B → exhaust bank
+- logical roles: room A supply + room B exhaust
+
+### PHASE_B
+
+- supply bank → room B
+- room A → exhaust bank
+- logical roles: room B supply + room A exhaust
+
+### Dead-time routing
+
+- `STARTUP_DEADTIME`: fans OFF, pre-position for PHASE_A
+- `DEADTIME_TO_B`: fans OFF, move/pre-position for PHASE_B
+- `DEADTIME_TO_A`: fans OFF, move/pre-position for PHASE_A
+- `OFF` / `FAULT`: fans OFF, route to configured safe position
+
+The hardware map rejects:
+
+- missing or overlapping fan-group membership,
+- missing servo positions,
+- a route configuration that does not require fan-off while moving,
+- active logical targets that contradict the selected phase/damper position.
+
+## Electrical note on PWM parallelization
+
+The 12 V fan supply is common/parallel.
+
+Only fan_1 and fan_2 are candidates for a shared PWM signal because they are members of the same supply bank and always receive the same logical target in this topology.
+
+Do not hard-wire the PWM pins together until the bench test confirms that the chosen open-drain stage can sink the combined pull-up current of both P12 PWM inputs and that boot/off behavior remains safe.
+
+fan_3 remains a separate PWM group so supply and exhaust can be balanced independently.
+
+## Mechanical requirement
+
+The route actuator is conceptually one logical servo actuator, but the mechanism must behave like a coupled double diverter:
+
+- position A connects supply → room A and room B → exhaust,
+- position B connects supply → room B and room A → exhaust,
+- the two air paths remain separated and must not short-circuit supply into exhaust,
+- fan power stays off during motion.
+
+This topology resolves the previous four-logical-role / three-physical-fan ambiguity without assigning one physical fan two simultaneous airflow directions.
