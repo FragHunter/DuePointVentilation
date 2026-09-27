@@ -85,8 +85,17 @@ function validateServoRouted2Plus1(config, errors) {
   }
 
   const routing = config.routing;
-  if (!routing || routing.mechanism !== "coupled_double_diverter") {
-    errors.push("servo_routed_2plus1 requires a coupled_double_diverter");
+  if (!routing || routing.mechanism !== "coupled_dual_t_diverter") {
+    errors.push("servo_routed_2plus1 requires coupled_dual_t_diverter routing");
+  }
+  if (routing?.coupling !== "single_servo_linkage") {
+    errors.push("routing must declare single_servo_linkage coupling");
+  }
+  const units = routing?.mechanical_units || {};
+  if (!units.supply || !units.exhaust) {
+    errors.push("routing must define supply and exhaust diverter units");
+  } else if (units.supply === units.exhaust) {
+    errors.push("supply and exhaust diverter units must be distinct");
   }
   if (routing?.fan_off_required_while_moving !== true) {
     errors.push("routing must require fan-off while the servo is moving");
@@ -195,6 +204,9 @@ export function resolvePhysicalActuatorTargets(
       fans,
       routing: {
         actuator_id: config.routing.actuator_id,
+        mechanism: config.routing.mechanism,
+        coupling: config.routing.coupling,
+        mechanical_units: { ...config.routing.mechanical_units },
         position: routingPosition,
         fan_off_required_while_moving:
           config.routing.fan_off_required_while_moving,
@@ -219,6 +231,9 @@ export function resolvePhysicalActuatorTargets(
     fans,
     routing: {
       actuator_id: config.routing.actuator_id,
+      mechanism: config.routing.mechanism,
+      coupling: config.routing.coupling,
+      mechanical_units: { ...config.routing.mechanical_units },
       position: routingPosition,
       fan_off_required_while_moving:
         config.routing.fan_off_required_while_moving,

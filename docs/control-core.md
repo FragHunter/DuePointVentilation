@@ -57,7 +57,7 @@ Physical fan grouping:
 - `fan_1` + `fan_2`: parallel **supply bank**
 - `fan_3`: **exhaust bank**
 
-The fans are not reversed electrically. A coupled two-position air diverter changes which room is connected to the supply bank and which room is connected to the exhaust bank.
+The fans are not reversed electrically. ROUTING-V0.3 uses two physically separate full-area T-diverters: one supply diverter and one exhaust diverter. One logical MZ966 actuator may move both shafts through a mechanical linkage, changing which room is connected to each fixed-direction fan bank.
 
 ### PHASE_A
 
@@ -97,11 +97,16 @@ fan_3 remains a separate PWM group so supply and exhaust can be balanced indepen
 
 ## Mechanical requirement
 
-The route actuator is conceptually one logical servo actuator, but the mechanism must behave like a coupled double diverter:
+The route actuator remains one logical servo actuator, but ROUTING-V0.3 models two distinct mechanical air bodies:
 
+- supply_t_diverter: full-area T-diverter between the supply bank and core A/B,
+- exhaust_t_diverter: full-area T-diverter between core A/B and the exhaust bank,
+- single_servo_linkage: one MZ966 may mechanically couple both shafts,
 - position A connects supply → room A and room B → exhaust,
 - position B connects supply → room B and room A → exhaust,
-- the two air paths remain separated and must not short-circuit supply into exhaust,
-- fan power stays off during motion.
+- the two air bodies remain physically isolated,
+- fan power stays off during all movement.
+
+The previous monolithic V0.2 double-diverter is not the preferred airflow design: its branch area was only about one third of the P12/core airflow area. The control-state semantics do not change with this mechanical correction.
 
 This topology resolves the previous four-logical-role / three-physical-fan ambiguity without assigning one physical fan two simultaneous airflow directions.

@@ -19,6 +19,27 @@ test("servo-routed 2+1 production map is structurally valid", () => {
   assert.equal(result.valid, true, result.errors.join("; "));
 });
 
+
+
+test("V0.3 routing requires two distinct full-area T-diverter units", () => {
+  assert.equal(config.routing.mechanism, "coupled_dual_t_diverter");
+  assert.equal(config.routing.coupling, "single_servo_linkage");
+  assert.deepEqual(config.routing.mechanical_units, {
+    supply: "supply_t_diverter",
+    exhaust: "exhaust_t_diverter",
+  });
+
+  const invalid = structuredClone(config);
+  invalid.routing.mechanism = "coupled_double_diverter";
+  const result = validateHardwareMap(invalid);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((error) =>
+      error.includes("coupled_dual_t_diverter"),
+    ),
+  );
+});
+
 test("phase A drives two parallel supply fans and one exhaust fan", () => {
   const result = resolvePhysicalActuatorTargets(
     {
@@ -40,6 +61,12 @@ test("phase A drives two parallel supply fans and one exhaust fan", () => {
     result.routing.position,
     "ROOM_A_SUPPLY_ROOM_B_EXHAUST",
   );
+  assert.equal(result.routing.mechanism, "coupled_dual_t_diverter");
+  assert.equal(result.routing.coupling, "single_servo_linkage");
+  assert.deepEqual(result.routing.mechanical_units, {
+    supply: "supply_t_diverter",
+    exhaust: "exhaust_t_diverter",
+  });
 });
 
 test("phase B swaps room routing without reversing fan banks", () => {

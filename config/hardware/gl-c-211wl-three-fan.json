@@ -6,17 +6,31 @@
     "physical_fan_count": 3
   },
   "physical_fans": [
-    {"id": "fan_1", "channel": 1},
-    {"id": "fan_2", "channel": 2},
-    {"id": "fan_3", "channel": 3}
+    {
+      "id": "fan_1",
+      "channel": 1
+    },
+    {
+      "id": "fan_2",
+      "channel": 2
+    },
+    {
+      "id": "fan_3",
+      "channel": 3
+    }
   ],
   "fan_groups": {
     "supply_bank": {
-      "members": ["fan_1", "fan_2"],
+      "members": [
+        "fan_1",
+        "fan_2"
+      ],
       "shared_pwm_signal_candidate": true
     },
     "exhaust_bank": {
-      "members": ["fan_3"],
+      "members": [
+        "fan_3"
+      ],
       "shared_pwm_signal_candidate": false
     }
   },
@@ -28,7 +42,7 @@
   },
   "routing": {
     "actuator_id": "servo_route",
-    "mechanism": "coupled_double_diverter",
+    "mechanism": "coupled_dual_t_diverter",
     "fan_off_required_while_moving": true,
     "safe_position": "SAFE",
     "positions": {
@@ -39,6 +53,11 @@
       "DEADTIME_TO_B": "ROOM_B_SUPPLY_ROOM_A_EXHAUST",
       "PHASE_B": "ROOM_B_SUPPLY_ROOM_A_EXHAUST",
       "DEADTIME_TO_A": "ROOM_A_SUPPLY_ROOM_B_EXHAUST"
+    },
+    "coupling": "single_servo_linkage",
+    "mechanical_units": {
+      "supply": "supply_t_diverter",
+      "exhaust": "exhaust_t_diverter"
     }
   }
 }
