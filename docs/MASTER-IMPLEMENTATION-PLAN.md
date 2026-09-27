@@ -2,6 +2,7 @@
 
 See also: [GAP-MATRIX.md](GAP-MATRIX.md) for the current cross-workstream list of open gaps, blockers and physical validation tasks.
 See also: [HARDWARE-INVENTORY.md](HARDWARE-INVENTORY.md) for the selected/available hardware and remaining electrical verification items.
+See also: [GL-C-211WL-INTEGRATION.md](GL-C-211WL-INTEGRATION.md) for controller-specific fan-interface validation.
 
 This document is the top-level execution plan for the complete project from sensors and psychrometrics through CAD, printing, fan control, Node-RED orchestration, commissioning and later servo/bypass upgrades.
 
@@ -141,7 +142,8 @@ Implemented there:
 
 ### Required actions
 
-- [ ] Record exact GLEDOPTO/WLED controller model and hardware revision.
+- [x] Record controller model: GLEDOPTO GL-C-211WL.
+- [ ] Record actual GL-C-211WL hardware revision and installed WLED firmware version.
 - [x] Record primary PSU: Mean Well LPV-35-12, 12 V / 3 A / 36 W.
 - [x] Record servo DC/DC converter model: LK1263.
 - [ ] Verify LK1263 input/output/current ratings and servo stall-current requirement.
