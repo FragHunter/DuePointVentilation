@@ -49,9 +49,10 @@ Manufacturer specifications relevant to this project:
 
 Project architecture currently assumes:
 
-- two fans per module
-- two room modules
-- only one directional fan per module active in normal pendulum operation
+- **three physical P12 Pro PST fans total are currently planned on one GL-C-211WL**
+- the control software still models four logical room/direction fan roles
+- the exact mechanical mapping from three physical fans to those four logical roles is still an explicit design item
+- only the fan(s) required for the active phase should run
 
 Open checks:
 
@@ -94,7 +95,7 @@ Open checks:
 - fan PWM interface transistor/open-drain stage if required
 - tach feedback strategy
 
-See `GL-C-211WL-INTEGRATION.md`.
+See `GL-C-211WL-INTEGRATION.md` and `GL-C-211WL-3FAN-TOPOLOGY.md`.
 
 ## Servo system
 
