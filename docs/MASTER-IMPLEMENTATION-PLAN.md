@@ -3,6 +3,7 @@
 See also: [GAP-MATRIX.md](GAP-MATRIX.md) for the current cross-workstream list of open gaps, blockers and physical validation tasks.
 See also: [HARDWARE-INVENTORY.md](HARDWARE-INVENTORY.md) for the selected/available hardware and remaining electrical verification items.
 See also: [GL-C-211WL-INTEGRATION.md](GL-C-211WL-INTEGRATION.md) for controller-specific fan-interface validation.
+See also: [MZ966-SERVO-INTEGRATION.md](MZ966-SERVO-INTEGRATION.md) for servo current sizing, control signal and interlock strategy.
 
 This document is the top-level execution plan for the complete project from sensors and psychrometrics through CAD, printing, fan control, Node-RED orchestration, commissioning and later servo/bypass upgrades.
 
@@ -619,7 +620,10 @@ Miuzei 180-degree servo phase.
 ### Electrical
 
 - [x] selected servo supply rail: LK1263 at 6 V / 3 A,
-- [ ] verify MZ966 voltage compatibility, stall/running current and simultaneous peak current against the 3 A rail,
+- [ ] measure actual MZ966 idle/movement/stall current; provisional design budget is 2.5 A per active servo at 6 V,
+- [x] initial control strategy: 50 Hz RC-servo pulse, 1500 µs neutral, conservative 1000–2000 µs endpoint calibration,
+- [x] initial 3 A-rail interlock: move only one servo at a time,
+- [ ] verify final calibrated OPEN/CLOSED pulse widths on the real mechanism,
 - [ ] common reference where required,
 - [ ] peak-current sizing,
 - [ ] controller/driver selection.
