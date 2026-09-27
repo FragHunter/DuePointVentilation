@@ -146,7 +146,8 @@ Implemented there:
 - [ ] Record actual GL-C-211WL hardware revision and installed WLED firmware version.
 - [x] Record primary PSU: Mean Well LPV-35-12, 12 V / 3 A / 36 W.
 - [x] Record servo DC/DC converter model: LK1263.
-- [ ] Verify LK1263 input/output/current ratings and servo stall-current requirement.
+- [x] Record LK1263 output: 6 V / 3 A (18 W maximum at stated rating).
+- [ ] Verify LK1263 input range/efficiency/thermal derating and Miuzei stall-current requirement.
 - [ ] Confirm exact ARCTIC P12 Pro PST variant and quantity.
 - [ ] Confirm current Mega S nozzle is 0.4 mm or update printer profile.
 - [ ] Record available PETG brand/material.
@@ -615,7 +616,8 @@ Miuzei 180-degree servo phase.
 
 ### Electrical
 
-- [ ] separate suitable 5 V servo supply,
+- [x] selected servo supply rail: LK1263 at 6 V / 3 A,
+- [ ] verify Miuzei servo voltage compatibility and stall/peak current against the 3 A rail,
 - [ ] common reference where required,
 - [ ] peak-current sizing,
 - [ ] controller/driver selection.
