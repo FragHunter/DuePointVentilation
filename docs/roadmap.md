@@ -7,6 +7,7 @@
 - [x] select MQTT as internal message bus
 - [x] select Aqara Temperature and Humidity Sensor T1 as initial Zigbee environmental sensor
 - [x] define Zigbee2MQTT sensor integration
+- [x] keep Aqara T1 as initial sensor because hardware is already available
 - [ ] identify exact GLEDOPTO WLED PWM controller model
 - [ ] verify ARCTIC P12 Pro PST electrical/PWM compatibility
 - [ ] define final power architecture
@@ -92,6 +93,28 @@ Goal: safely control one intake and one exhaust fan through the selected GLEDOPT
 - [ ] test interaction with doors/windows/passive leaks
 - [ ] quantify effective airflow if possible
 
+## M6A — 3D-printed heat exchanger
+
+See [heat-exchanger.md](heat-exchanger.md).
+
+- [ ] define target airflow and allowed pressure drop
+- [ ] choose exchanger topology (counter-flow / cross-counter-flow)
+- [ ] define fan/duct interfaces
+- [ ] define maximum core dimensions
+- [ ] select print material and print parameters
+- [ ] design modular exchanger core
+- [ ] provide condensate collection and drain
+- [ ] design for inspection and cleaning
+- [ ] perform inter-stream air-leak test
+- [ ] measure four exchanger temperatures during prototype testing
+- [ ] calculate/log temperature effectiveness
+- [ ] measure or estimate airflow for each fan-speed point
+- [ ] evaluate pressure drop
+- [ ] evaluate condensate and frost behavior
+- [ ] reserve a mechanical bypass path
+- [ ] decide whether the core is removable/replaceable
+- [ ] iterate CAD based on measured thermal and airflow performance
+
 ## M7 — Multi-installation support
 
 - [ ] configuration-driven zone definitions
@@ -116,6 +139,7 @@ Goal: safely control one intake and one exhaust fan through the selected GLEDOPT
 - [ ] log controller states and reason codes
 - [ ] log ventilation runtime
 - [ ] estimate extracted water mass from airflow × humidity delta × time
+- [ ] log heat-exchanger temperatures and effectiveness
 - [ ] battery warnings
 - [ ] sensor/controller offline alerts
 
@@ -124,6 +148,7 @@ Goal: safely control one intake and one exhaust fan through the selected GLEDOPT
 - [ ] environmental enclosure
 - [ ] cable/power safety
 - [ ] fan mounting
+- [ ] heat-exchanger mounting and condensate drainage
 - [ ] protected outside sensor placement
 - [ ] commissioning checklist
 - [ ] sensor calibration record
@@ -135,6 +160,7 @@ Goal: safely control one intake and one exhaust fan through the selected GLEDOPT
 ## M10 — Miuzei 180° servo dampers
 
 - [ ] mechanical damper design
+- [ ] exchanger bypass damper if selected
 - [ ] independent 5 V servo supply sizing
 - [ ] servo controller selection
 - [ ] per-servo open/closed angle calibration
