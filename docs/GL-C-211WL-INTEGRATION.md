@@ -38,7 +38,9 @@ Preferred if the installed firmware can produce the required fan PWM timing on a
 
 Typical concept:
 
-ESP32 GPIO -> resistor/transistor/open-drain stage -> P12 PWM input
+ESP32 logic -> fail-safe two-stage sink interface -> P12 PWM input
+
+The preferred candidate defaults the PWM node LOW when the ESP signal is LOW/high-Z, so controller reset does not simply release the fan input. See P12-PWM-FAILSAFE-INTERFACE.md.
 
 LPV-35-12 12 V -> P12 power
 
@@ -50,6 +52,20 @@ Use if the GL-C-211WL cannot generate a stable suitable fan-control signal.
 
 Use if repurposing the GL-C-211WL pins/firmware proves fragile.
 
+## Verified P12 PWM electrical limits
+
+ARCTIC documents 25 kHz target / 21-28 kHz accepted PWM, logic LOW <= 0.8 V,
+maximum 5 mA sourced/short-circuit current and maximum 5.25 V open-circuit
+voltage on the PWM input.
+
+For fan_1 + fan_2 in parallel, design the shared SUPPLY_PWM sink for at least
+the conservative 2 x 5 mA = 10 mA input-source bound. EXHAUST_PWM only drives
+fan_3 and therefore has the single-fan 5 mA bound.
+
+Do not parallel tachometer outputs.
+
+Detailed circuit and bench procedure: P12-PWM-FAILSAFE-INTERFACE.md
+
 ## Bench verification required
 
 - [ ] record actual GL-C-211WL hardware revision
@@ -60,7 +76,7 @@ Use if repurposing the GL-C-211WL pins/firmware proves fragile.
 - [ ] verify 0/25/50/75/100% duty behavior
 - [ ] verify boot/reset/Wi-Fi reconnect behavior
 - [ ] verify no unsafe startup pulse
-- [ ] add transistor/open-drain interface if required
+- [x] define fail-safe two-stage fan-PWM interface candidate; physical validation still required
 - [ ] only then connect the P12 PWM control input
 
 ## Boot/reset consideration

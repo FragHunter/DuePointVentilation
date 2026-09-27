@@ -215,11 +215,11 @@ Issue: #6
 
 ### Required actions
 
-- [ ] Document P12 Pro PST 4-pin pinout.
+- [x] Document P12 Pro PST 4-pin pinout and official PWM electrical limits.
 - [ ] Document exact GLEDOPTO output topology.
 - [ ] Determine whether its output is suitable for the fan PWM input directly.
-- [ ] If not, design an interface/adapter stage.
-- [ ] Verify common ground strategy.
+- [x] Design fail-safe two-stage PWM sink candidate; bench validation remains required.
+- [ ] Verify common ground strategy on the real GL-C-211WL/interface wiring.
 - [ ] Verify fan gets correct continuous supply voltage.
 - [ ] Measure PWM frequency/behavior.
 - [ ] Determine fan start threshold.
@@ -228,6 +228,14 @@ Issue: #6
 - [ ] Verify power-cycle behavior.
 - [ ] Verify WLED restart behavior.
 - [ ] Verify controller/network loss leaves a safe state.
+
+### Current interface design
+
+P12-PWM-FAILSAFE-INTERFACE.md defines the current candidate. It uses a
+hardware-default-LOW two-stage sink so ESP reset/high-Z tends toward fan PWM
+LOW instead of a released input. fan_1 + fan_2 share SUPPLY_PWM only after
+bench validation; conservative combined source/sink bound is 10 mA from the
+ARCTIC 5 mA-per-input specification.
 
 ### Gate 2
 

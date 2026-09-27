@@ -42,10 +42,14 @@ Manufacturer specifications relevant to this project:
 - 12 V DC
 - 0.33 A per fan
 - 4-pin PWM
+- pin 1 GND / pin 2 +12 V / pin 3 tachometer / pin 4 PWM
 - 600–3000 rpm
 - 0 rpm below 5 % PWM
 - 120 × 120 × 25 mm
 - target PWM frequency 25 kHz; documented acceptable range 21–28 kHz
+- PWM logic LOW maximum 0.8 V
+- PWM interface maximum sourced/short-circuit current 5 mA per fan
+- PWM input open-circuit maximum 5.25 V
 
 Project architecture:
 
@@ -61,8 +65,11 @@ Open checks:
 
 - real fan-mount fit using the generated gauge
 - exact startup/minimum stable PWM with the actual controller path
-- stopped-fan aerodynamic restriction
-- whether tach feedback will be captured
+- bench validation of the fail-safe two-stage PWM sink
+- fan_1 + fan_2 shared PWM waveform and <=0.8 V LOW under combined load
+- boot/reset behavior with the real GL-C-211WL signal source
+- whether tach feedback will be captured; do not parallel tach outputs
+- final fan-bank airflow calibration
 
 ## GLEDOPTO / WLED controller
 
@@ -98,7 +105,7 @@ Open checks:
 - fan PWM interface transistor/open-drain stage if required
 - tach feedback strategy
 
-See `GL-C-211WL-INTEGRATION.md` and `GL-C-211WL-3FAN-TOPOLOGY.md`.
+See `GL-C-211WL-INTEGRATION.md`, `GL-C-211WL-3FAN-TOPOLOGY.md` and `P12-PWM-FAILSAFE-INTERFACE.md`.
 
 ## Servo system
 
