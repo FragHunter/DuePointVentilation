@@ -219,7 +219,8 @@ Do not mechanically bury the connectors or make electrical separation impossible
 
 - [x] dual-supply-bank packaging geometry proof (two transitions + merge collector)
 - [ ] final single exhaust fan bank
-- [x] coupled double-diverter body geometry proof
+- [x] coupled double-diverter body geometry proof (V0.2; superseded due to area restriction)
+- [x] full-area T-diverter replacement geometry (V0.3; print two)
 - [x] common-shaft flap blank geometry proof
 - [ ] final branch/core connection flanges
 - [ ] serviceable seals/joints and hard stops
@@ -303,6 +304,52 @@ while V0.1 measurements still determine shaft fit, seal gap, linkage radius,
 loaded servo travel/dead-time and the real P12/core interfaces.
 
 Bench protocol: docs/bench-test-protocol-routing-v0.2.md
+
+## ROUTING-V0.2 airflow-area finding
+
+The monolithic V0.2 double-diverter successfully proved packaging and chamber
+isolation, but it exposed an unacceptable airflow-area restriction before any
+large print was attempted.
+
+Calculated areas:
+
+- V0.2 branch port: 65 x 50 mm = 3250 mm2
+- P12 112 mm aperture: approximately 9852 mm2
+- current core open area: 10000 mm2
+- V0.2 branch / P12 area: approximately 33.0 percent
+- V0.2 branch / core area: 32.5 percent
+
+Decision: do not continue the monolithic side-by-side double-diverter as the
+main airflow architecture. Retain its exports as traceable geometry evidence,
+but supersede it with two separate full-area T-diverters.
+
+## ROUTING-V0.3 full-area T-diverter pivot
+
+V0.3 prints two independent three-way housings instead of one constricted
+double housing:
+
+- supply T-diverter: supply collector -> core A or core B
+- exhaust T-diverter: core A or core B -> fan_3
+- the housings remain physically isolated
+- a single MZ966 can couple their two shafts mechanically by linkage
+
+Each T-diverter uses three 112 x 112 mm ports (front common, left branch,
+right branch). Port area is 12544 mm2, approximately 127 percent of the P12
+aperture and 125 percent of current core open area.
+
+Tracked V0.3 parts:
+
+1. full-area-t-diverter-body (print two)
+2. t-diverter-flap-blank (print two after shaft/seal fit is known)
+3. exhaust-fan-square-transition (fan_3 to exhaust common port)
+
+All parts fit the 200 x 200 x 200 mm Mega S project envelope.
+
+V0.3 is the preferred airflow architecture going forward, but final shaft,
+seal, stops, linkage, core-branch adapters and drainage remain measurement
+gates.
+
+Bench protocol: docs/bench-test-protocol-routing-v0.3.md
 
 ## Open measurements before final dimensions
 

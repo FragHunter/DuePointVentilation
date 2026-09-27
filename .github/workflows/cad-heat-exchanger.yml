@@ -8,6 +8,7 @@ on:
       - "docs/cad-servo-routing-2plus1.md"
       - "docs/bench-test-protocol-routing-v0.1.md"
       - "docs/bench-test-protocol-routing-v0.2.md"
+      - "docs/bench-test-protocol-routing-v0.3.md"
       - "docs/simulation-hx-v1.1.md"
       - "docs/printing-anycubic-i3-mega-s.md"
       - ".github/workflows/cad-heat-exchanger.yml"
@@ -18,6 +19,7 @@ on:
       - "docs/cad-servo-routing-2plus1.md"
       - "docs/bench-test-protocol-routing-v0.1.md"
       - "docs/bench-test-protocol-routing-v0.2.md"
+      - "docs/bench-test-protocol-routing-v0.3.md"
       - "docs/simulation-hx-v1.1.md"
       - "docs/printing-anycubic-i3-mega-s.md"
       - ".github/workflows/cad-heat-exchanger.yml"
@@ -65,6 +67,13 @@ jobs:
             --hx-config parameters.yaml \
             --out routing/generated-v0.2
 
+      - name: Build servo-routing V0.3 full-area diverter
+        run: |
+          PYTHONPATH=. python routing/build_v03.py \
+            --config routing/prototype-v0.3.yaml \
+            --hx-config parameters.yaml \
+            --out routing/generated-v0.3
+
       - name: Check Anycubic i3 Mega S build-volume fit
         run: |
           python tools/check_printer_fit.py             --config parameters.yaml             --printer config/printers/anycubic-i3-mega-s.yaml             --out review/generated/printer-fit.json
@@ -107,4 +116,14 @@ jobs:
             cad/heat-exchanger/routing/generated-v0.2/*.step
             cad/heat-exchanger/routing/generated-v0.2/*.stl
             cad/heat-exchanger/routing/generated-v0.2/*.json
+          if-no-files-found: error
+
+      - name: Upload ROUTING-V0.3 full-area-diverter artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ROUTING-V0.3-full-area-diverter
+          path: |
+            cad/heat-exchanger/routing/generated-v0.3/*.step
+            cad/heat-exchanger/routing/generated-v0.3/*.stl
+            cad/heat-exchanger/routing/generated-v0.3/*.json
           if-no-files-found: error

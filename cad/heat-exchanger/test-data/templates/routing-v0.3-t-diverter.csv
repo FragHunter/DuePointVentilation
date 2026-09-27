@@ -1,0 +1,1 @@
+timestamp,body_role,flow_direction,route,pwm_pct,intended_flow_m3h,closed_branch_leakage_m3h,delta_p_pa,servo_travel_ms,servo_peak_a,servo_endpoint_a,shaft_leakage_note,binding_note,notes

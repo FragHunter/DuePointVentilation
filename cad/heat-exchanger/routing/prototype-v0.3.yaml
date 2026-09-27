@@ -1,0 +1,31 @@
+revision: ROUTING-V0.3
+
+printer:
+  x_mm: 200
+  y_mm: 200
+  z_mm: 200
+
+# One full-area three-way module is printed for supply and one for exhaust.
+# The two modules remain physically isolated and are mechanically coupled by
+# one servo/linkage rather than sharing one constricted monolithic housing.
+t_diverter:
+  outer_mm: 146
+  wall_mm: 4
+  port_mm: 112
+  shaft_bore_mm: 4.4
+  flap_height_mm: 108
+  flap_length_mm: 70
+  flap_thickness_mm: 3
+  flap_hub_outer_mm: 10
+
+# fan_3 exhaust adapter: P12 112 mm round aperture to 112 x 112 square
+# common-lane interface of the exhaust T-diverter.
+exhaust_transition:
+  length_mm: 45
+  wall_mm: 4
+  outlet_mm: 112
+
+printing:
+  material: PETG
+  nozzle_mm: 0.4
+  layer_height_mm: 0.2

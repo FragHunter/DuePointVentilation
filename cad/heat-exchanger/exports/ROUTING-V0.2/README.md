@@ -1,5 +1,13 @@
 # ROUTING-V0.2 geometry-proof exports
 
+## SUPERSEDED AIRFLOW NOTE
+
+The V0.2 monolithic double-diverter body is retained for traceability, but it is
+not the preferred next full-size print. Its 65 x 50 mm branch port is only
+3250 mm2, about 33 percent of the P12 aperture and current core open area.
+ROUTING-V0.3 replaces this with two separate full-area T-diverters using
+112 x 112 mm ports.
+
 Second-stage printable geometry proof for the servo-routed 2+1 fan manifold.
 
 ## Parts

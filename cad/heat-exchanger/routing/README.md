@@ -47,9 +47,46 @@ Build command:
 PYTHONPATH=. python routing/build_v02.py --config routing/prototype-v0.2.yaml --hx-config parameters.yaml --out exports/ROUTING-V0.2
 
 The double-diverter is a topology/packaging proof, not production geometry.
+
+V0.2 airflow-area finding: each monolithic branch port is only about 3250 mm2,
+approximately 33 percent of the P12 aperture/core open area. The V0.2
+monolithic double-diverter is therefore superseded for airflow development and
+should not be printed as the next full-size prototype.
+
 Final shaft/bearing, flap seal, hard stops, servo mount/linkage, branch flanges
 and condensate details remain locked behind ROUTING-V0.1 measurements.
 
 The two P12 supply fans use two identical fan-rect-transition parts. The single
 exhaust fan can continue using the V0.1 fan-pod interface until its final
 exhaust-side transition is defined.
+
+
+## ROUTING-V0.3
+
+V0.3 replaces the constricted monolithic double-diverter with two separate
+full-area T-diverters:
+
+- one full-area T-diverter for supply
+- one full-area T-diverter for exhaust
+- both remain physically isolated
+- one MZ966 may mechanically couple both shafts through linkage
+- each common/branch port is 112 x 112 mm
+
+The 112 x 112 mm port area is 12544 mm2, larger than both the modelled P12
+112 mm circular aperture (about 9852 mm2) and the current core open area
+(10000 mm2).
+
+Also implemented:
+
+- generic vertical-shaft flap blank with hub
+- fan_3 round-to-square exhaust transition
+- V0.3 tests that reject a return to the V0.2 area restriction
+
+Configuration: routing/prototype-v0.3.yaml
+
+Build command:
+
+PYTHONPATH=. python routing/build_v03.py --config routing/prototype-v0.3.yaml --hx-config parameters.yaml --out exports/ROUTING-V0.3
+
+V0.3 still does not freeze shaft fit, seal geometry, stops, servo linkage,
+core-branch flanges or condensate details.
