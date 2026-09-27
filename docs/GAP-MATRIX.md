@@ -16,7 +16,7 @@ This matrix reflects the current project state across `main`, PR #3 (`cad/hx-v1`
 | Project integration | Merge CAD/HX-V1.1 work | PARTIAL | Full HX-V1.1 branch with CAD, exports, simulations, review images | PR #3 is still draft/open; keep unmerged until physical calibration/bench gates are understood or intentionally merge as prototype | PR #3, #11 |
 | Project integration | Merge control/Node-RED core | PARTIAL | Control core + Node-RED wrapper on branch | PR #9 still draft/open; WLED adapter and live Node-RED flow are missing | PR #9 |
 | Project integration | Keep issues synchronized with reality | OPEN | Issues #1/#2/#4/#5/#6/#7/#8/#10/#11 exist | Several issue checklists do not reflect branch implementations yet; update/close only after merge/validation | Open issues |
-| Hardware inventory | Exact GLEDOPTO/WLED controller model | BLOCKED / INPUT | Generic controller abstraction only | Record exact model, hardware revision, WLED version and output topology | Issue #6 |
+| Hardware inventory | Exact GLEDOPTO/WLED controller model | PARTIAL | GLEDOPTO GL-C-211WL identified; 12–24 V ESP32 WLED PWM controller, 15 A total, 10 A/channel | Record actual hardware revision + WLED version; measure output/GPIO topology and signal levels | GL-C-211WL-INTEGRATION.md, Issue #6 |
 | Hardware inventory | PSU / power architecture | PARTIAL | Mean Well LPV-35-12 identified: 12 V, 3 A, 36 W; primary 12 V supply | Finish total current/peak budget, fusing, distribution, connectors, cable drop and decide one-vs-two PSU topology | HARDWARE-INVENTORY.md, M0/M1 |
 | Hardware inventory | Exact P12 Pro PST variant/count | BLOCKED / INPUT | Model assumptions + fan gauge CAD | Confirm actual physical fan, connector/pinout, mounting dimensions, quantity per module | #6, #11 |
 | Hardware inventory | Mega S nozzle/filament actual setup | BLOCKED / INPUT | Profile assumes 0.4 mm nozzle + PETG | Confirm installed nozzle and actual PETG brand; tune temperatures/retraction/speed | #11 |
@@ -51,7 +51,7 @@ This matrix reflects the current project state across `main`, PR #3 (`cad/hx-v1`
 | Node-RED | Persistent context policy | OPEN | Node context used | Decide whether context storage is memory/file; restart must intentionally re-enter safe state | #4 |
 | MQTT | Topic/schema contract | PARTIAL | `docs/mqtt.md` exists | Apply exact site/module IDs and test with live broker | PR #9 |
 | MQTT | Retain policy | PARTIAL | Safety rule documented | Enforce: no retained non-zero transient fan commands | PR #9 |
-| WLED/GLEDOPTO | Electrical compatibility with P12 PWM | BLOCKED / INPUT | No real controller characterization | Measure output topology/frequency/levels; decide direct vs adapter circuit | #6 |
+| WLED/GLEDOPTO | Electrical compatibility with P12 PWM | PARTIAL / PHYSICAL TEST | GL-C-211WL identified; normal outputs are intended for analog PWM LED loads, not assumed PC-fan PWM logic | Scope candidate GPIO/output levels and frequency; build verified open-drain/transistor interface if needed | GL-C-211WL-INTEGRATION.md, #6 |
 | WLED/GLEDOPTO | P12 pinout/wiring diagram | OPEN | Generic fan model only | Document exact 4-pin wiring, 12 V feed, PWM, tach, ground | #6 |
 | WLED/GLEDOPTO | Startup/minimum stable PWM | PHYSICAL TEST | No measured curve | Measure start threshold and stable minimum | #6 |
 | WLED/GLEDOPTO | 0% behavior | PHYSICAL TEST | Logical OFF exists | Verify actual fan stops and controller output behavior | #6 |
