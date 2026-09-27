@@ -1,4 +1,4 @@
-revision: HX-V1
+revision: HX-V1.1
 topology: regenerative_matrix
 
 core:
@@ -7,7 +7,8 @@ core:
   length_mm: 160.0
   cells_x: 18
   cells_y: 18
-  wall_thickness_mm: 0.60
+  wall_thickness_mm: 0.80
+  perimeter_frame_mm: 3.20
 
 interfaces:
   fan_nominal_mm: 120
@@ -15,20 +16,31 @@ interfaces:
 
 operation:
   phase_time_s: 60
-  switch_deadtime_s: 3
+  switch_deadtime_s: 3.0
 
 module:
   routing_variant: axial_opposed_fans
-  core_clearance_mm: 0.80
-  shell_wall_mm: 4.0
+  side_clearance_mm: 0.80
+  sleeve_wall_mm: 4.0
+  sleeve_length_mm: 161.6
   plenum_length_mm: 45.0
+  interface_flange_outer_mm: 146.0
+  interface_flange_thickness_mm: 6.0
+  interface_hole_spacing_mm: 132.0
+  interface_hole_diameter_mm: 4.5
+  gasket_nominal_thickness_mm: 1.0
+  gasket_compressed_thickness_mm: 0.8
   fan_plate_thickness_mm: 4.0
   fan_aperture_mm: 112.0
   fan_hole_spacing_mm: 105.0
   fan_hole_diameter_mm: 4.5
+  drain_hole_diameter_mm: 8.0
+  drain_boss_outer_diameter_mm: 14.0
+  drain_boss_length_mm: 10.0
+  installation_slope_deg: 2.0
 
 printing:
-  material: TBD
+  material: PETG
   nozzle_mm: 0.40
   layer_height_mm: 0.20
 

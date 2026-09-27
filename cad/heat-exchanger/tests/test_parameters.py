@@ -9,50 +9,56 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_default_parameters_load_and_validate() -> None:
-    params = load_parameters(ROOT / "parameters.yaml")
+    p = load_parameters(ROOT / "parameters.yaml")
+    assert p.revision == "HX-V1.1"
+    assert p.topology == "regenerative_matrix"
+    assert p.paired_modules == 2
+    assert p.channel_count == 18 * 18
+    assert p.wall_thickness_mm == pytest.approx(0.8)
+    assert p.perimeter_frame_mm == pytest.approx(3.2)
+    assert p.channel_width_mm == pytest.approx(5.5555555556)
+    assert p.channel_depth_mm == pytest.approx(5.5555555556)
+    assert p.open_area_mm2 == pytest.approx(10000.0, abs=1e-5)
+    assert p.sleeve_length_mm == pytest.approx(161.6)
+    assert p.core_start_z_mm == pytest.approx(0.8)
+    assert p.core_end_z_mm == pytest.approx(160.8)
 
-    assert params.revision == "HX-V1"
-    assert params.topology == "regenerative_matrix"
-    assert params.paired_modules == 2
-    assert params.channel_count == 18 * 18
-    assert params.channel_width_mm == pytest.approx(6.0333333333)
-    assert params.channel_depth_mm == pytest.approx(6.0333333333)
-    assert params.routing_variant == "axial_opposed_fans"
-    assert params.module_outer_mm == pytest.approx(128.8)
-    assert params.module_total_length_mm == pytest.approx(258.0)
+
+def test_fan_and_matrix_open_areas_are_closely_matched() -> None:
+    p = load_parameters(ROOT / "parameters.yaml")
+    ratio = p.open_area_mm2 / p.fan_aperture_area_mm2
+    assert 0.95 < ratio < 1.10
 
 
-def test_open_area_is_plausible() -> None:
-    params = load_parameters(ROOT / "parameters.yaml")
-
-    assert params.open_area_mm2 > 0
-    assert 0.5 < params.open_area_ratio < 0.95
-    assert params.gross_internal_surface_area_m2 > 0
-    assert params.approximate_solid_volume_cm3 > 0
+def test_print_wall_is_aligned_to_nozzle_strategy() -> None:
+    p = load_parameters(ROOT / "parameters.yaml")
+    unit = p.nozzle_mm / 2.0
+    assert p.wall_thickness_mm / unit == pytest.approx(
+        round(p.wall_thickness_mm / unit)
+    )
 
 
 def test_invalid_dense_geometry_is_rejected() -> None:
-    params = load_parameters(ROOT / "parameters.yaml")
+    p = load_parameters(ROOT / "parameters.yaml")
     invalid = HeatExchangerParameters(
         **{
-            **params.__dict__,
+            **p.__dict__,
             "width_mm": 10.0,
             "depth_mm": 10.0,
             "cells_x": 10,
             "cells_y": 10,
+            "perimeter_frame_mm": 3.2,
             "wall_thickness_mm": 1.0,
         }
     )
-
     with pytest.raises(ValueError):
         invalid.validate()
 
 
-def test_pair_count_is_currently_fixed_to_two() -> None:
-    params = load_parameters(ROOT / "parameters.yaml")
+def test_sleeve_stack_must_match_core_and_seals() -> None:
+    p = load_parameters(ROOT / "parameters.yaml")
     invalid = HeatExchangerParameters(
-        **{**params.__dict__, "paired_modules": 3}
+        **{**p.__dict__, "sleeve_length_mm": p.sleeve_length_mm + 1.0}
     )
-
     with pytest.raises(ValueError):
         invalid.validate()

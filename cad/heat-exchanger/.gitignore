@@ -1,4 +1,7 @@
 generated/
+generated-*/
 .venv/
 __pycache__/
 .pytest_cache/
+review/generated/
+simulation/generated/
