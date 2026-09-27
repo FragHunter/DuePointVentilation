@@ -10,6 +10,9 @@ from hx import (
     build_assembly_compound,
     build_core,
     build_core_coupon,
+    build_fan_mount_gauge,
+    build_fit_core_plug,
+    build_fit_sleeve_ring,
     build_core_sleeve,
     build_gasket,
     build_outside_plenum,
@@ -33,6 +36,9 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
 
     core = build_core(p)
     coupon = build_core_coupon(p)
+    fit_core_plug = build_fit_core_plug(p)
+    fit_sleeve_ring = build_fit_sleeve_ring(p)
+    fan_mount_gauge = build_fan_mount_gauge(p)
     sleeve = build_core_sleeve(p)
     room_plenum = build_room_plenum(p)
     outside_plenum = build_outside_plenum(p)
@@ -45,6 +51,9 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
     for suffix, shape in [
         ("core", core),
         ("core-coupon", coupon),
+        ("fit-core-plug", fit_core_plug),
+        ("fit-sleeve-ring", fit_sleeve_ring),
+        ("fan-mount-gauge", fan_mount_gauge),
         ("core-sleeve", sleeve),
         ("room-plenum", room_plenum),
         ("outside-plenum", outside_plenum),
@@ -58,6 +67,9 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
         "topology": p.topology,
         "core_dimensions_mm": _bbox(core),
         "core_coupon_dimensions_mm": _bbox(coupon),
+        "fit_core_plug_dimensions_mm": _bbox(fit_core_plug),
+        "fit_sleeve_ring_dimensions_mm": _bbox(fit_sleeve_ring),
+        "fan_mount_gauge_dimensions_mm": _bbox(fan_mount_gauge),
         "sleeve_dimensions_mm": _bbox(sleeve),
         "room_plenum_dimensions_mm": _bbox(room_plenum),
         "outside_plenum_dimensions_mm": _bbox(outside_plenum),

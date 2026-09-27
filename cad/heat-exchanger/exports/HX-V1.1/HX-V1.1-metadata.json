@@ -19,6 +19,21 @@
     "removable_core": true,
     "reserve_bypass": true
   },
+  "fan_mount_gauge_dimensions_mm": {
+    "x": 120.00000020000006,
+    "y": 120.00000020000006,
+    "z": 3.034811815908598
+  },
+  "fit_core_plug_dimensions_mm": {
+    "x": 120.0000002,
+    "y": 120.0000002,
+    "z": 20.000000200000002
+  },
+  "fit_sleeve_ring_dimensions_mm": {
+    "x": 129.6000002,
+    "y": 129.6000002,
+    "z": 20.000000200000017
+  },
   "matrix": {
     "approximate_solid_volume_cm3": 704.0,
     "cells_x": 18,

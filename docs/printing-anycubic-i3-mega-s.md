@@ -91,3 +91,13 @@ The full core is likely to be one of the longest print jobs in the project and s
 
 
 The generated coupon is exported as HX-V1.1-core-coupon.step and HX-V1.1-core-coupon.stl. It preserves the production wall/channel geometry in a much smaller 6 x 6 channel, 30 mm tall test piece.
+
+## Low-cost calibration parts before full prints
+
+The repository now exports three additional calibration parts:
+
+- HX-V1.1-fit-core-plug: short production-size core footprint,
+- HX-V1.1-fit-sleeve-ring: short production-clearance sleeve section,
+- HX-V1.1-fan-mount-gauge: minimal 120 mm fan-interface gauge.
+
+Use these before printing the full sleeve/plenums. They are intended to catch dimensional shrinkage, clearance errors and P12 mounting assumptions with very little filament and print time.

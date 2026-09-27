@@ -3,6 +3,11 @@
 from .parameters import HeatExchangerParameters, load_parameters
 from .core import build_core
 from .coupon import build_core_coupon
+from .calibration import (
+    build_fan_mount_gauge,
+    build_fit_core_plug,
+    build_fit_sleeve_ring,
+)
 from .module import (
     build_assembly_compound,
     build_core_sleeve,
@@ -17,6 +22,9 @@ __all__ = [
     "load_parameters",
     "build_core",
     "build_core_coupon",
+    "build_fan_mount_gauge",
+    "build_fit_core_plug",
+    "build_fit_sleeve_ring",
     "build_core_sleeve",
     "build_room_plenum",
     "build_outside_plenum",

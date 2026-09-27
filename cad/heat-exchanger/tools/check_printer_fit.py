@@ -15,6 +15,9 @@ if str(ROOT) not in sys.path:
 from hx import (
     build_core,
     build_core_coupon,
+    build_fan_mount_gauge,
+    build_fit_core_plug,
+    build_fit_sleeve_ring,
     build_core_sleeve,
     build_gasket,
     build_outside_plenum,
@@ -60,6 +63,9 @@ def main():
     parts = {
         "core": build_core(p),
         "core_coupon": build_core_coupon(p),
+        "fit_core_plug": build_fit_core_plug(p),
+        "fit_sleeve_ring": build_fit_sleeve_ring(p),
+        "fan_mount_gauge": build_fan_mount_gauge(p),
         "core_sleeve": build_core_sleeve(p),
         "room_plenum": build_room_plenum(p),
         "outside_plenum": build_outside_plenum(p),

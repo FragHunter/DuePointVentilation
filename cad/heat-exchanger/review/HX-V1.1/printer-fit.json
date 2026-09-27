@@ -71,6 +71,81 @@
         ]
       ]
     },
+    "fit_core_plug": {
+      "native_bbox_mm": [
+        120.0,
+        120.0,
+        20.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          20.0,
+          120.0,
+          120.0
+        ],
+        [
+          120.0,
+          20.0,
+          120.0
+        ],
+        [
+          120.0,
+          120.0,
+          20.0
+        ]
+      ]
+    },
+    "fit_sleeve_ring": {
+      "native_bbox_mm": [
+        129.6,
+        129.6,
+        20.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          20.0,
+          129.6,
+          129.6
+        ],
+        [
+          129.6,
+          20.0,
+          129.6
+        ],
+        [
+          129.6,
+          129.6,
+          20.0
+        ]
+      ]
+    },
+    "fan_mount_gauge": {
+      "native_bbox_mm": [
+        120.0,
+        120.0,
+        3.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          3.0,
+          120.0,
+          120.0
+        ],
+        [
+          120.0,
+          3.0,
+          120.0
+        ],
+        [
+          120.0,
+          120.0,
+          3.0
+        ]
+      ]
+    },
     "core_sleeve": {
       "native_bbox_mm": [
         146.0,
