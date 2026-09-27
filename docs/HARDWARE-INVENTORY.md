@@ -154,6 +154,10 @@ Open checks before wiring:
 
 Do not freeze the servo power design until the actual servo current is confirmed against the 6 V / 3 A converter limit.
 
+Current provisional engineering allowance: **2.5 A stall budget per active MZ966 at 6 V**, pending measurement. Only one servo should move at a time on the current 3 A rail.
+
+See `MZ966-SERVO-INTEGRATION.md`.
+
 ## Sensors
 
 ### Aqara Temperature and Humidity Sensor T1
