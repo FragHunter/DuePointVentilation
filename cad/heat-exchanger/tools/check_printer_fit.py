@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
 
 from hx import (
     build_core,
+    build_core_coupon,
     build_core_sleeve,
     build_gasket,
     build_outside_plenum,
@@ -58,6 +59,7 @@ def main():
 
     parts = {
         "core": build_core(p),
+        "core_coupon": build_core_coupon(p),
         "core_sleeve": build_core_sleeve(p),
         "room_plenum": build_room_plenum(p),
         "outside_plenum": build_outside_plenum(p),

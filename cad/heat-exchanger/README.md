@@ -16,6 +16,7 @@ Each module uses one bidirectional regenerative core.
 HX-V1.1 is modular and serviceable:
 
 - removable 120 x 120 x 160 mm core,
+- 6 x 6 / 30 mm core process coupon for printer validation,
 - reinforced 3.2 mm cartridge perimeter,
 - 0.8 mm internal matrix walls,
 - open-ended core sleeve,

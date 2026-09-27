@@ -9,6 +9,7 @@ from cadquery import exporters
 from hx import (
     build_assembly_compound,
     build_core,
+    build_core_coupon,
     build_core_sleeve,
     build_gasket,
     build_outside_plenum,
@@ -31,6 +32,7 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
     p = load_parameters(config_path)
 
     core = build_core(p)
+    coupon = build_core_coupon(p)
     sleeve = build_core_sleeve(p)
     room_plenum = build_room_plenum(p)
     outside_plenum = build_outside_plenum(p)
@@ -42,6 +44,7 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
 
     for suffix, shape in [
         ("core", core),
+        ("core-coupon", coupon),
         ("core-sleeve", sleeve),
         ("room-plenum", room_plenum),
         ("outside-plenum", outside_plenum),
@@ -54,6 +57,7 @@ def build(config_path: Path, out_dir: Path) -> dict[str, object]:
         "revision": p.revision,
         "topology": p.topology,
         "core_dimensions_mm": _bbox(core),
+        "core_coupon_dimensions_mm": _bbox(coupon),
         "sleeve_dimensions_mm": _bbox(sleeve),
         "room_plenum_dimensions_mm": _bbox(room_plenum),
         "outside_plenum_dimensions_mm": _bbox(outside_plenum),

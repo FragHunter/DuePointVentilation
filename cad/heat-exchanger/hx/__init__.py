@@ -2,6 +2,7 @@
 
 from .parameters import HeatExchangerParameters, load_parameters
 from .core import build_core
+from .coupon import build_core_coupon
 from .module import (
     build_assembly_compound,
     build_core_sleeve,
@@ -15,6 +16,7 @@ __all__ = [
     "HeatExchangerParameters",
     "load_parameters",
     "build_core",
+    "build_core_coupon",
     "build_core_sleeve",
     "build_room_plenum",
     "build_outside_plenum",

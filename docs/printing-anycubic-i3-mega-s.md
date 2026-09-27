@@ -81,10 +81,13 @@ Do not let the slicer silently replace the intended 0.8 mm walls with a single v
 
 Recommended sequence:
 
-1. print a small wall/channel coupon,
+1. print the generated HX-V1.1 core coupon first,
 2. verify 0.8 mm wall production and channel openness,
 3. verify dimensional accuracy,
 4. print sleeve/plenum fit pieces,
 5. only then print the full 160 mm core.
 
 The full core is likely to be one of the longest print jobs in the project and should not be the first dimensional experiment.
+
+
+The generated coupon is exported as HX-V1.1-core-coupon.step and HX-V1.1-core-coupon.stl. It preserves the production wall/channel geometry in a much smaller 6 x 6 channel, 30 mm tall test piece.
