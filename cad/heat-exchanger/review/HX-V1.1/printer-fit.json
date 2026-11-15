@@ -1,0 +1,265 @@
+{
+  "printer": {
+    "id": "anycubic-i3-mega-s",
+    "technology": "FDM",
+    "build_volume_mm": {
+      "x": 210.0,
+      "y": 210.0,
+      "z": 205.0
+    },
+    "planning_margin_mm": {
+      "x": 5.0,
+      "y": 5.0,
+      "z": 5.0
+    },
+    "nozzle_mm": 0.4,
+    "filament_diameter_mm": 1.75
+  },
+  "usable_envelope_mm": {
+    "x": 200.0,
+    "y": 200.0,
+    "z": 200.0
+  },
+  "parts": {
+    "core": {
+      "native_bbox_mm": [
+        120.0,
+        120.0,
+        160.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          120.0,
+          120.0,
+          160.0
+        ],
+        [
+          120.0,
+          160.0,
+          120.0
+        ],
+        [
+          160.0,
+          120.0,
+          120.0
+        ]
+      ]
+    },
+    "core_coupon": {
+      "native_bbox_mm": [
+        43.73333333333333,
+        43.73333333333333,
+        30.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          30.0,
+          43.733333,
+          43.733333
+        ],
+        [
+          43.733333,
+          30.0,
+          43.733333
+        ],
+        [
+          43.733333,
+          43.733333,
+          30.0
+        ]
+      ]
+    },
+    "fit_core_plug": {
+      "native_bbox_mm": [
+        120.0,
+        120.0,
+        20.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          20.0,
+          120.0,
+          120.0
+        ],
+        [
+          120.0,
+          20.0,
+          120.0
+        ],
+        [
+          120.0,
+          120.0,
+          20.0
+        ]
+      ]
+    },
+    "fit_sleeve_ring": {
+      "native_bbox_mm": [
+        129.6,
+        129.6,
+        20.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          20.0,
+          129.6,
+          129.6
+        ],
+        [
+          129.6,
+          20.0,
+          129.6
+        ],
+        [
+          129.6,
+          129.6,
+          20.0
+        ]
+      ]
+    },
+    "fan_mount_gauge": {
+      "native_bbox_mm": [
+        120.0,
+        120.0,
+        3.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          3.0,
+          120.0,
+          120.0
+        ],
+        [
+          120.0,
+          3.0,
+          120.0
+        ],
+        [
+          120.0,
+          120.0,
+          3.0
+        ]
+      ]
+    },
+    "core_sleeve": {
+      "native_bbox_mm": [
+        146.0,
+        146.0,
+        161.6
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          146.0,
+          146.0,
+          161.6
+        ],
+        [
+          146.0,
+          161.6,
+          146.0
+        ],
+        [
+          161.6,
+          146.0,
+          146.0
+        ]
+      ]
+    },
+    "room_plenum": {
+      "native_bbox_mm": [
+        146.0,
+        146.0,
+        55.0
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          55.0,
+          146.0,
+          146.0
+        ],
+        [
+          146.0,
+          55.0,
+          146.0
+        ],
+        [
+          146.0,
+          146.0,
+          55.0
+        ]
+      ]
+    },
+    "outside_plenum": {
+      "native_bbox_mm": [
+        146.0,
+        147.80000009999998,
+        55.00000000000003
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          55.0,
+          146.0,
+          147.8
+        ],
+        [
+          55.0,
+          147.8,
+          146.0
+        ],
+        [
+          146.0,
+          55.0,
+          147.8
+        ],
+        [
+          146.0,
+          147.8,
+          55.0
+        ],
+        [
+          147.8,
+          55.0,
+          146.0
+        ],
+        [
+          147.8,
+          146.0,
+          55.0
+        ]
+      ]
+    },
+    "gasket": {
+      "native_bbox_mm": [
+        120.0,
+        120.0,
+        0.8
+      ],
+      "fits_with_margin": true,
+      "fitting_orientations_mm": [
+        [
+          0.8,
+          120.0,
+          120.0
+        ],
+        [
+          120.0,
+          0.8,
+          120.0
+        ],
+        [
+          120.0,
+          120.0,
+          0.8
+        ]
+      ]
+    }
+  }
+}

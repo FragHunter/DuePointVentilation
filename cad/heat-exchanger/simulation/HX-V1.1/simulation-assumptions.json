@@ -1,0 +1,40 @@
+{
+  "revision": "HX-V1.1",
+  "assumptions": {
+    "air_density_kg_m3": 1.2,
+    "air_dynamic_viscosity_pa_s": 1.81e-05,
+    "air_cp_j_kgk": 1005.0,
+    "air_conductivity_w_mk": 0.0262,
+    "entry_exit_loss_k": 1.5,
+    "thermal_model": "1D segmented solid matrix, quasi-steady air per segment, no axial solid conduction, no moisture phase change"
+  },
+  "materials": {
+    "PETG": {
+      "name": "PETG",
+      "density_kg_m3": 1270.0,
+      "cp_j_kgk": 1200.0,
+      "conductivity_w_mk": 0.2,
+      "note": "illustrative printed PETG-like properties"
+    },
+    "CERAMIC_GENERIC": {
+      "name": "CERAMIC_GENERIC",
+      "density_kg_m3": 2200.0,
+      "cp_j_kgk": 800.0,
+      "conductivity_w_mk": 1.5,
+      "note": "illustrative dense ceramic storage medium, not a selected product"
+    }
+  },
+  "geometry": {
+    "channel_width_mm": 5.555555555555555,
+    "hydraulic_diameter_mm": 5.555555555555555,
+    "open_area_mm2": 10000.0,
+    "surface_area_m2": 1.152,
+    "solid_volume_cm3": 704.0
+  },
+  "warnings": [
+    "Core-only pressure model excludes filters, fans, plenums, bends, screens and inactive-fan drag.",
+    "Thermal model is a screening model, not CFD or a validated heat-exchanger rating.",
+    "Condensation, re-evaporation, frost and latent heat are not modeled.",
+    "Material properties are illustrative assumptions and must be replaced by the actual printed/insert material."
+  ]
+}

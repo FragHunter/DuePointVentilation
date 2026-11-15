@@ -1,0 +1,1 @@
+timestamp,config,route,pwm_supply_pct,pwm_exhaust_pct,fan1_rpm,fan2_rpm,fan3_rpm,supply_flow_m3h,exhaust_flow_m3h,closed_branch_leakage_m3h,delta_p_supply_pa,delta_p_exhaust_pa,servo_travel_ms,servo_peak_a,servo_endpoint_a,notes
