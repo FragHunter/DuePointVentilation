@@ -1,0 +1,14 @@
+{
+  "indoor": {
+    "temperature_c": 18.0,
+    "relative_humidity_pct": 75.0,
+    "timestamp_ms": 1790500000000
+  },
+  "outdoor": {
+    "temperature_c": 10.0,
+    "relative_humidity_pct": 60.0,
+    "timestamp_ms": 1790500000000
+  },
+  "now_ms": 1790500000000,
+  "controller_fault": false
+}

@@ -1,0 +1,2 @@
+timestamp_iso,test_id,module,phase,fan_pwm_pct,configuration,t_room_c,t_outside_c,t_module_out_c,rh_room_pct,rh_outside_pct,rh_module_out_pct,airflow_m3h,pressure_drop_pa,noise_dba,notes
+2026-01-01T00:00:00Z,example-001,A,EXHAUST,50,core-plus-stopped-fan,20.0,0.0,10.0,70.0,60.0,65.0,40.0,8.0,35.0,replace example row before measurement

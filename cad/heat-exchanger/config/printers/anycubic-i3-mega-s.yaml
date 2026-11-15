@@ -1,0 +1,22 @@
+printer:
+  id: anycubic-i3-mega-s
+  technology: FDM
+  build_volume_mm:
+    x: 210.0
+    y: 210.0
+    z: 205.0
+  planning_margin_mm:
+    x: 5.0
+    y: 5.0
+    z: 5.0
+  nozzle_mm: 0.40
+  filament_diameter_mm: 1.75
+
+project_profile:
+  material: PETG
+  layer_height_mm: 0.20
+  explicit_line_width_mm: 0.40
+  notes:
+    - "Project starting profile; tune temperatures/retraction on the actual machine."
+    - "Keep regenerative core channels parallel to Z when printing."
+    - "Use a brim for the tall core/sleeve if adhesion testing shows it is needed."

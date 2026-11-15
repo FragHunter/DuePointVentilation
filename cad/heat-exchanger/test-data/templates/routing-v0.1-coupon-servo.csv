@@ -1,0 +1,2 @@
+test_id,date_utc,printer,material,nozzle_mm,layer_height_mm,part,nominal_feature_mm,measured_feature_mm,shaft_or_insert_actual_mm,fit_result,linkage_radius_mm,servo_voltage_v,servo_idle_current_a,servo_motion_peak_a,servo_endpoint_current_a,travel_a_to_b_ms,travel_b_to_a_ms,temperature_c,notes
+example,,,,,,,,,,,,,,,,,,,

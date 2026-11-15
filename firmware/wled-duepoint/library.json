@@ -1,0 +1,9 @@
+{
+  "name": "wled-usermod-duepoint-actuator",
+  "version": "0.1.0",
+  "description": "Fail-safe DuePointVentilation actuator usermod for WLED/ESP32",
+  "keywords": ["wled", "esp32", "pwm", "fan", "servo", "ventilation"],
+  "frameworks": ["arduino"],
+  "platforms": ["espressif32"],
+  "build": {"libArchive": false}
+}

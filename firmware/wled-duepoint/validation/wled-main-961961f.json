@@ -1,0 +1,14 @@
+{
+  "wled_repository": "wled/WLED",
+  "wled_commit": "961961fdde8c22150a0212243621ee71bc9a7639",
+  "wled_commit_date": "2026-09-25",
+  "platformio_core": "6.2.0",
+  "framework_arduinoespressif32": "3.3.8+sha.f2a3fa2b",
+  "environment": "esp32dev derived duepoint_esp32",
+  "result": "PASS",
+  "ram_bytes": 87016,
+  "ram_percent_reported": 26.6,
+  "flash_bytes": 1338183,
+  "flash_percent_reported": 85.1,
+  "binary_contains_usermod": true
+}

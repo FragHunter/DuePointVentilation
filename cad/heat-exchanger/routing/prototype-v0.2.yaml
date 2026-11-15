@@ -1,0 +1,49 @@
+revision: ROUTING-V0.2
+
+printer:
+  x_mm: 200
+  y_mm: 200
+  z_mm: 200
+
+# One part per supply fan. It converts the existing P12 round aperture into
+# a compact rectangular collector interface. Dimensions remain provisional.
+fan_transition:
+  length_mm: 60
+  wall_mm: 4
+  outlet_width_mm: 100
+  outlet_height_mm: 48
+
+# Two rectangular transition outlets enter a shared plenum. A short center
+# splitter prevents immediate cross-flow and ends before the common outlet.
+supply_collector:
+  width_mm: 120
+  depth_mm: 120
+  length_mm: 70
+  wall_mm: 4
+  inlet_width_mm: 100
+  inlet_height_mm: 48
+  inlet_offset_mm: 26
+  outlet_width_mm: 112
+  outlet_height_mm: 112
+  splitter_height_mm: 24
+
+# Geometry proof for two isolated three-way chambers on one common shaft.
+# This is deliberately not a final gasket, stop, servo mount or shaft design.
+double_diverter:
+  width_mm: 146
+  depth_mm: 90
+  height_mm: 146
+  wall_mm: 4
+  separator_mm: 4
+  common_port_height_mm: 110
+  branch_port_height_mm: 50
+  branch_gap_mm: 8
+  shaft_bore_mm: 4.4
+  flap_clearance_mm: 2
+  flap_length_mm: 58
+  flap_thickness_mm: 3
+
+printing:
+  material: PETG
+  nozzle_mm: 0.4
+  layer_height_mm: 0.2
